@@ -152,6 +152,12 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
         CTXLogVerbose(CTXLogContextMessageBroker, @"<stopping: consumer_thread: (%p) topic: %@>", self, _topic);
         [self _tearDown];
         CTXLogVerbose(CTXLogContextMessageBroker, @"<stopped: consumer_thread: (%p) topic: %@>", self, _topic);
+        
+        if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
+            dispatch_async(_callbackQueue, ^{
+                [delegate amqpConsumerThreadDidStop:self];
+            });
+        }
     }
 }
 
