@@ -40,4 +40,6 @@
                    delegate:(id<AMQPConsumerThreadDelegate>)delegate
               callbackQueue:(dispatch_queue_t)callbackQueue;
 
+- (void)stop;
+
 @end

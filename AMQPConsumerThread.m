@@ -73,9 +73,11 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
     AMQPConsumer        *_consumer;
     
     dispatch_queue_t    _callbackQueue;
-    
+    dispatch_queue_t    _lockQueue;
     
 	NSObject<AMQPConsumerThreadDelegate> *delegate;
+    
+    BOOL                _started;
 }
 
 @synthesize delegate;
@@ -87,7 +89,9 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
 - (void)dealloc
 {
     [self _tearDown];
+    
     dispatch_release(_callbackQueue);
+    dispatch_release(_lockQueue);
     
 	[super dealloc];
 }
@@ -104,13 +108,14 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
         _configuration  = [configuration retain];
         _exchangeKey    = [exchangeKey copy];
         _topic          = [topic copy];
+        delegate        = theDelegate;
         
         if(!callbackQueue) {
             callbackQueue = dispatch_get_main_queue();
         }
         dispatch_retain(callbackQueue);
-        _callbackQueue = callbackQueue;
-        delegate = theDelegate;
+        _callbackQueue  = callbackQueue;
+        _lockQueue      = dispatch_queue_create("com.ef.smart.classroom.broker.amqp.consumer-thread.lock", NULL);
         
         _ttlManager = [[CTXTTLManager alloc] init];
         _ttlManager.delegate = self;
@@ -135,6 +140,11 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
             });
             return;
         }
+        
+        dispatch_sync(_lockQueue, ^{
+            _started = YES;
+        });
+        
         CTXLogVerbose(CTXLogContextMessageBroker, @"<started: consumer_thread: (%p) topic: %@>", self, _topic);
         
         while(![self isCancelled]) {
@@ -153,11 +163,31 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
         [self _tearDown];
         CTXLogVerbose(CTXLogContextMessageBroker, @"<stopped: consumer_thread: (%p) topic: %@>", self, _topic);
         
+        dispatch_sync(_lockQueue, ^{
+            _started = NO;
+        });
+
         if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
             dispatch_async(_callbackQueue, ^{
                 [delegate amqpConsumerThreadDidStop:self];
             });
         }
+    }
+}
+
+#pragma mark - Public Methods
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+- (void)stop
+{
+    [self cancel];
+    
+    __block BOOL stopped = NO;
+    while(!stopped) {
+        dispatch_sync(_lockQueue, ^{
+            stopped = !_started;
+        });
     }
 }
 
