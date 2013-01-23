@@ -340,22 +340,96 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
     // 4) channel
     // 5) connection
     ////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // This is ugly, but I can't think of a better way to ensure proper clean up
+    // at this time (pdcgomes 23.01.2013)
+    ////////////////////////////////////////////////////////////////////////////////
+
+    
+    // 1) Consumer
     @try {
-        [_consumer release], _consumer = nil;
-        [_queue unbindFromExchange:_exchange withKey:_topic];
-        [_exchange release], _exchange = nil;
-        [_queue release], _queue = nil;
-//        [_channel close];
-        [_channel release], _channel = nil;
-//        [_connection disconnect];
-        [_connection release], _connection = nil;
+        [_consumer release];
     }
     @catch (NSException *exception) {
         CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
     }
     @finally {
-        [_ttlManager removeAllObjects];
+        _consumer = nil;
     }
+
+    // 2) Unbind queue
+    @try {
+        [_queue unbindFromExchange:_exchange withKey:_topic];
+    }
+    @catch (NSException *exception) {
+        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+    }
+    @finally {
+        
+    }
+
+    // 3 Exchange
+    @try {
+        [_exchange release];
+    }
+    @catch (NSException *exception) {
+        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+    }
+    @finally {
+        _exchange = nil;
+    }
+
+    // 4 Queue
+    @try {
+        [_queue release];
+    }
+    @catch (NSException *exception) {
+        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+    }
+    @finally {
+        _queue = nil;
+    }
+
+    // 4 Channel
+    @try {
+        [_channel release];
+    }
+    @catch (NSException *exception) {
+        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+    }
+    @finally {
+        _channel = nil;
+    }
+
+    // 5 Connection
+    @try {
+        [_connection disconnect];
+    }
+    @catch (NSException *exception) {
+        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+    }
+    @finally {
+        [_connection release];
+        _connection = nil;
+    }
+
+    [_ttlManager removeAllObjects];
+
+//    @try {
+//        [_consumer release], _consumer = nil;
+//        [_queue unbindFromExchange:_exchange withKey:_topic];
+//        [_exchange release], _exchange = nil;
+//        [_queue release], _queue = nil;
+//        [_channel release], _channel = nil;
+//        [_connection release], _connection = nil;
+//    }
+//    @catch (NSException *exception) {
+//        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+//    }
+//    @finally {
+//        [_ttlManager removeAllObjects];
+//    }
 }
 
 #pragma mark - Private Methods - Message consuming loop
