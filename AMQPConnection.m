@@ -53,7 +53,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 }
 - (void)dealloc
 {
-	[self disconnect];
+//	[self disconnect];
 	
 	amqp_destroy_connection(connection);
 	
@@ -62,7 +62,6 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (void)connectToHost:(NSString*)host onPort:(int)port
 {
-    
 	socketFD = amqp_open_socket([host UTF8String], port);
     fcntl(socketFD, F_SETFL, O_NONBLOCK);
     fcntl(socketFD, F_SETFL, O_ASYNC);
@@ -99,13 +98,13 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 - (void)disconnect
 {
 	amqp_rpc_reply_t reply = amqp_connection_close(connection, AMQP_REPLY_SUCCESS);
+	close(socketFD);
 	
 	if(reply.reply_type != AMQP_RESPONSE_NORMAL)
 	{
 		[NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: %@", [self errorDescriptionForReply:reply]];
 	}
 	
-	close(socketFD);
 }
 
 - (void)checkLastOperation:(NSString*)context
