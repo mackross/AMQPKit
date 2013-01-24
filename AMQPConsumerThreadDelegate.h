@@ -28,6 +28,7 @@
 @required
 - (void)amqpConsumerThreadReceivedNewMessage:(AMQPMessage *)message;
 - (void)amqpConsumerThread:(AMQPConsumerThread *)thread didFailWithError:(NSError *)error;
+- (void)amqpConsumerThread:(AMQPConsumerThread *)thread reportedError:(NSError *)error;
 
 @optional
 - (void)amqpConsumerThreadDidStart:(AMQPConsumerThread *)thread;
