@@ -56,6 +56,9 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
 - (BOOL)_setupConsumerQueue:(NSError **)error;
 - (BOOL)_setupConsumer:(NSError **)error;
 
+- (AMQPMessage *)_consume;
+- (void)_handleConnectionError;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -522,8 +525,39 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     HandleFrameError:
-    [self cancel];
+    [self _handleConnectionError];
+//    [self cancel];
     return nil;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+- (void)_handleConnectionError
+{
+    BOOL isConnected = [_connection checkConnection];
+    dispatch_async(_callbackQueue, ^{
+        if([self.delegate respondsToSelector:@selector(amqpConsumerThread:reportedError:)]) {
+            NSString *errorDescription = nil;
+            NSString *failureReason = nil;
+            if(!isConnected) {
+                errorDescription    = @"Connection closed";
+                failureReason       = @"The connection has been unexpectedly closed";
+            }
+            else {
+                errorDescription    = @"Connection error";
+                failureReason       = @"There was an unexpected error while attempting to process incoming data";
+            }
+            NSDictionary *userInfo = (@{
+                                      NSLocalizedDescriptionKey : errorDescription,
+                                      NSLocalizedFailureReasonErrorKey : failureReason});
+            NSError *error = [NSError errorWithDomain:@"com.ef.smart.classroom.broker.amqp"
+                                                 code:-10
+                                             userInfo:userInfo];
+            [self.delegate amqpConsumerThread:self reportedError:error];
+        }
+    });
+
+    [self cancel];
 }
 
 @end
