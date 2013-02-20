@@ -138,16 +138,25 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
         if(![self _setup:&error]) {
             CTXLogError(CTXLogContextMessageBroker, @"<starting: consumer_thread: (%p) topic: %@ :: failed to start>", self, _topic);
             CTXLogError(CTXLogContextMessageBroker, @"<starting: consumer_thread: (%p) topic: %@ :: error %@>", self, _topic, error);
-            dispatch_sync(_callbackQueue, ^{
-                [delegate amqpConsumerThread:self didFailWithError:error];
-            });
+            if([delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
+                dispatch_sync(_callbackQueue, ^{
+                    
+                    [delegate amqpConsumerThread:self didFailWithError:error];
+                });
+            }
             return;
         }
         
         dispatch_sync(_lockQueue, ^{
             _started = YES;
         });
-        
+
+        if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStart:)]) {
+            dispatch_sync(_callbackQueue, ^{
+                [delegate amqpConsumerThreadDidStart:self];
+            });
+        }
+
         CTXLogVerbose(CTXLogContextMessageBroker, @"<started: consumer_thread: (%p) topic: %@>", self, _topic);
         
         while(![self isCancelled]) {
