@@ -48,6 +48,8 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
     BOOL _checkConnectionTimerFired;
 }
 
+@property (nonatomic, copy) NSString *topic;
+
 - (BOOL)_setup:(NSError **)error;
 - (void)_tearDown;
 
@@ -67,7 +69,7 @@ NSTimeInterval kCheckConnectionInterval = 30.0;
 {
     NSDictionary        *_configuration;
     NSString            *_exchangeKey;
-    NSString            *_topic;
+//    NSString            *_topic;
     
     AMQPConnection      *_connection;
     AMQPChannel         *_channel;

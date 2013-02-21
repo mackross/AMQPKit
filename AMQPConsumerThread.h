@@ -32,7 +32,8 @@
 {
 }
 
-@property (assign) NSObject<AMQPConsumerThreadDelegate> *delegate;
+@property (nonatomic, assign) NSObject<AMQPConsumerThreadDelegate> *delegate;
+@property (nonatomic, readonly, copy) NSString *topic;
 
 - (id)initWithConfiguration:(NSDictionary *)configuration
                 exchangeKey:(NSString *)exchangeKey
