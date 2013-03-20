@@ -50,7 +50,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     BOOL            _checkConnectionTimerFired;
     NSUInteger      _reconnectionCount;
     
-    BOOL            _errorWasTriggered;
+    BOOL            _connectionErrorWasRaised;
 }
 
 @property (nonatomic, copy) NSString *topic;
@@ -185,7 +185,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             _started = NO;
         });
 
-        if(_errorWasTriggered) {
+        if(_connectionErrorWasRaised) {
             if([delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
                 dispatch_sync(_callbackQueue, ^{
                     [delegate amqpConsumerThread:self didFailWithError:error];
@@ -569,9 +569,12 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         if([self _attemptToReconnect]) {
             return;
         }
+        if([self isCancelled]) {
+            return;
+        };
     }
-    
-    _errorWasTriggered = YES;
+
+    _connectionErrorWasRaised = YES;
     
     dispatch_async(_callbackQueue, ^{
         if([self.delegate respondsToSelector:@selector(amqpConsumerThread:reportedError:)]) {
@@ -594,8 +597,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             [self.delegate amqpConsumerThread:self reportedError:error];
         }
     });
-
-    [self cancel];
+//    [self cancel];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -606,6 +608,10 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     
     _reconnectionCount = 0;
     while(_reconnectionCount < kMaxReconnectionAttempts) {
+        if([self isCancelled]) {
+            break;
+        };
+        
         _reconnectionCount++;
         
         CTXLogVerbose(CTXLogContextMessageBroker, @"<reconnect: consumer_thread: (%p) topic: %@ :: reconnection attempt #%d...>", self, _topic, _reconnectionCount);
