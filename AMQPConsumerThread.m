@@ -185,25 +185,25 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             _started = NO;
         });
 
-        if(_connectionErrorWasRaised) {
-            if([delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
-                dispatch_sync(_callbackQueue, ^{
-                    [delegate amqpConsumerThread:self didFailWithError:error];
-                });
-            }
-        }
-        else {
-            if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
-                dispatch_async(_callbackQueue, ^{
-                    [delegate amqpConsumerThreadDidStop:self];
-                });
-            }
-        }
-//        if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
-//            dispatch_async(_callbackQueue, ^{
-//                [delegate amqpConsumerThreadDidStop:self];
-//            });
+//        if(_connectionErrorWasRaised) {
+//            if([delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
+//                dispatch_sync(_callbackQueue, ^{
+//                    [delegate amqpConsumerThread:self didFailWithError:error];
+//                });
+//            }
 //        }
+//        else {
+//            if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
+//                dispatch_async(_callbackQueue, ^{
+//                    [delegate amqpConsumerThreadDidStop:self];
+//                });
+//            }
+//        }
+        if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
+            dispatch_async(_callbackQueue, ^{
+                [delegate amqpConsumerThreadDidStop:self];
+            });
+        }
     }
 }
 
