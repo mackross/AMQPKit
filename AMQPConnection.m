@@ -153,7 +153,6 @@ NSString *const kAMQPOperationException     = @"AMQPException";
         CTXLogError(CTXLogContextMessageBroker, @"<amqp_connection (%p) :: connection closed!>", self);
         return NO;
     }
-    
     return YES;
 }
 
