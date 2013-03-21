@@ -17,6 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <sys/ioctl.h>
 #import "AMQPConsumerThread.h"
 #import "AMQPWrapper.h"
 #import "AMQPExchange+Additions.h"
@@ -185,20 +186,6 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             _started = NO;
         });
 
-//        if(_connectionErrorWasRaised) {
-//            if([delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
-//                dispatch_sync(_callbackQueue, ^{
-//                    [delegate amqpConsumerThread:self didFailWithError:error];
-//                });
-//            }
-//        }
-//        else {
-//            if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
-//                dispatch_async(_callbackQueue, ^{
-//                    [delegate amqpConsumerThreadDidStop:self];
-//                });
-//            }
-//        }
         if([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
             dispatch_async(_callbackQueue, ^{
                 [delegate amqpConsumerThreadDidStop:self];
@@ -374,14 +361,18 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     ////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////
-    // This is ugly, but I can't think of a better way to ensure proper clean up
-    // at this time (pdcgomes 23.01.2013)
+    // Note: if we don't currently have connectivity, some of these calls can
+    // block for quite a bit (a few seconds)
+    // (pdcgomes 21.03.2013)
     ////////////////////////////////////////////////////////////////////////////////
 
     @try {
         [_consumer release]; _consumer = nil;
         @try {
-            [_queue unbindFromExchange:_exchange withKey:_topic];
+            // if we're not connected, there's no point in attempting to unbind (pdcgomes 21.03.2013)
+            if(!_connectionErrorWasRaised) {
+                [_queue unbindFromExchange:_exchange withKey:_topic];
+            }
         }
         @catch (NSException *exception) {
             CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
@@ -389,7 +380,11 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         [_exchange release];    _exchange = nil;
         [_queue release];       _queue = nil;
         [_channel release];     _channel = nil;
-        [_connection disconnect];
+        
+        // if we're not connected, there's no point in attempting to disconnect (pdcgomes 21.03.2013)
+        if(!_connectionErrorWasRaised) {
+            [_connection disconnect];
+        }
     }
     @catch (NSException *exception) {
         CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
@@ -455,27 +450,26 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                 timeout.tv_usec = 0;
                 
                 ret = select(sock+1, &read_flags, NULL, NULL, &timeout);
+
+                int bytesToRead = 0; ioctl(sock, FIONREAD, &bytesToRead);
+                ioctl(sock, FIONREAD, &bytesToRead);
+
                 if(ret == -1) {
                     CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic %@ :: select() error (%s)>", self, _topic, strerror(errno));
                 }
-                
                 if(_checkConnectionTimerFired) {
                     _checkConnectionTimerFired = NO;
 //                    CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic: %@ :: heartbeat>", self, _topic);
                     [_exchange publishMessage:@"Heartbeat" messageID:@"" payload:@"" usingRoutingKey:@"heartbeat"];
                     [_ttlManager addObject:kCheckConnectionToken ttl:kCheckConnectionInterval];
                 }
-                // TODO: ADD ERROR HANDLING HERE
-//                if (ret == -1) {
-//                    printf("select: %s\n", strerror(errno));
-//                }
-//                else if (ret == 0) {
-//                                            printf("select timedout\n");
-//                }
-//                if (FD_ISSET(sock, &read_flags)) {
-//                    printf("Flag is set\n");
-//                }
+                
+                BOOL hasErrorCondition = (ret == -1 || (ret == 1 && bytesToRead == 0));
+                if(hasErrorCondition) {
+                    goto HandleFrameError;
+                }
             } while (ret == 0 && ![self isCancelled]);
+            
         }
 
         ////////////////////////////////////////////////////////////////////////////////
