@@ -42,5 +42,6 @@
               callbackQueue:(dispatch_queue_t)callbackQueue;
 
 - (void)stop;
+- (void)stopNoWait;
 
 @end
