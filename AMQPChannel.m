@@ -56,13 +56,13 @@
 }
 - (void)close
 {
-    if([connection checkConnection]) {
+//    if([connection checkConnection]) {
         amqp_channel_close(connection.internalConnection, channel, AMQP_REPLY_SUCCESS);
-    }
-    else {
-        NSLog(@"<amqp_channel: error: unable to close channel due to disconnection>");
-        [NSException raise:kAMQPOperationException format:@"%@: %@", @"AMQPChannel", @"Unable to close the channel. Connection lost."];
-    }
+//    }
+//    else {
+//        NSLog(@"<amqp_channel: error: unable to close channel due to disconnection>");
+//        [NSException raise:kAMQPOperationException format:@"%@: %@", @"AMQPChannel", @"Unable to close the channel. Connection lost."];
+//    }
 }
 
 @end

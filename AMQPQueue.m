@@ -60,13 +60,13 @@
 }
 - (void)unbindFromExchange:(AMQPExchange*)theExchange withKey:(NSString*)bindingKey
 {
-    if([channel.connection checkConnection]) {
+//    if([channel.connection checkConnection]) {
         amqp_queue_unbind(channel.connection.internalConnection, channel.internalChannel, queueName, theExchange.internalExchange, amqp_cstring_bytes([bindingKey UTF8String]), AMQP_EMPTY_TABLE);
-    }
-    else {
-        NSLog(@"<amqp_queue: error: unable to unbind queue from exchange due to disconnection>");
-        [NSException raise:kAMQPOperationException format:@"%@: %@", @"AMQPQueue", @"Unable to unbind queue from exchange. Connection lost."];
-    }
+//    }
+//    else {
+//        NSLog(@"<amqp_queue: error: unable to unbind queue from exchange due to disconnection>");
+//        [NSException raise:kAMQPOperationException format:@"%@: %@", @"AMQPQueue", @"Unable to unbind queue from exchange. Connection lost."];
+//    }
 	
 	[channel.connection checkLastOperation:@"Failed to unbind queue from exchange"];
 }
