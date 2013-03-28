@@ -17,13 +17,15 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#import <unistd.h>
+#import <netinet/tcp.h>
+#import <socket.h>
+//#import <sys/poll.h>
+
 #import "AMQPConnection.h"
 
 #import "amqp.h"
 #import "amqp_framing.h"
-#import <unistd.h>
-#import <netinet/tcp.h>
-//#import <sys/poll.h>
 
 #import "AMQPChannel.h"
 
