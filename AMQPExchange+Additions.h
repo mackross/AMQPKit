@@ -19,4 +19,9 @@
                payload:(NSString *)body
        usingRoutingKey:(NSString *)theRoutingKey;
 
+- (void)publishMessage:(NSString *)messageType
+             messageID:(NSString *)messageID
+           payloadData:(NSData *)body
+       usingRoutingKey:(NSString *)theRoutingKey;
+
 @end

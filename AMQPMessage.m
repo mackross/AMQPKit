@@ -27,6 +27,7 @@
 @implementation AMQPMessage
 
 @synthesize body;
+@synthesize data;
 
 @synthesize contentType;
 @synthesize contentEncoding;
@@ -65,7 +66,7 @@
 	
 	if(self = [super init])
 	{
-		body = AMQP_BYTES_TO_NSSTRING(theBody);
+//		body = AMQP_BYTES_TO_NSSTRING(theBody);
 		
 		consumerTag = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->consumer_tag);
 		deliveryTag = theDeliveryProperties->delivery_tag;
@@ -90,6 +91,13 @@
 		
 		read = NO;
 		receivedAt = [receiveTimestamp copy];
+
+        if(!contentType || [contentType isEqualToString:@"t"]) {
+            body = AMQP_BYTES_TO_NSSTRING(theBody);
+        }
+        else if([contentType isEqualToString:@"b"]) {
+            data = [[NSData dataWithBytes:theBody.bytes length:theBody.len] retain];
+        }
 	}
 	
 	return self;
@@ -99,6 +107,7 @@
 	if(self = [super init])
 	{
 		body = [theMessage.body copy];
+        data = [theMessage.data copy];
 		
 		consumerTag			= [theMessage.consumerTag copy];
 		deliveryTag			= theMessage.deliveryTag;
@@ -130,6 +139,7 @@
 - (void)dealloc
 {
 	[body release];
+    [data release];
 	[consumerTag release];
 	[exchangeName release];
 	[routingKey release];

@@ -30,6 +30,7 @@
 @interface AMQPMessage : NSObject
 {
 	NSString *body;
+    NSData   *data;
 	
 	// from properties
 	NSString *contentType;
@@ -59,6 +60,7 @@
 }
 
 @property (readonly) NSString *body;
+@property (readonly) NSData *data;
 
 @property (readonly) NSString *contentType;
 @property (readonly) NSString *contentEncoding;
