@@ -98,6 +98,9 @@
         else if([contentType isEqualToString:@"b"]) {
             data = [[NSData dataWithBytes:theBody.bytes length:theBody.len] retain];
         }
+        else {
+            body = AMQP_BYTES_TO_NSSTRING(theBody);
+        }
 	}
 	
 	return self;
