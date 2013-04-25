@@ -402,6 +402,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     }
 
     [_ttlManager removeAllObjects];
+    _ttlManager = nil;
 
 //    @try {
 //        [_consumer release], _consumer = nil;
