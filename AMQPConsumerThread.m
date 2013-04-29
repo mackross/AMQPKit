@@ -468,7 +468,13 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                 if(_checkConnectionTimerFired) {
                     _checkConnectionTimerFired = NO;
 //                    CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic: %@ :: heartbeat>", self, _topic);
-                    [_exchange publishMessage:@"Heartbeat" messageID:@"" payload:@"" usingRoutingKey:@"heartbeat"];
+                    
+                    // If we're idle for a long long time,
+                    // the outer autorelease pool on consume will never drain because we're stuck here
+                    // (pdcgomes 29.04.2013)
+                    @autoreleasepool {
+                        [_exchange publishMessage:@"Heartbeat" messageID:@"" payload:@"" usingRoutingKey:@"heartbeat"];
+                    }
                     [_ttlManager addObject:kCheckConnectionToken ttl:kCheckConnectionInterval];
                 }
                 
