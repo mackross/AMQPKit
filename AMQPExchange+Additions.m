@@ -8,6 +8,7 @@
 
 #import "AMQPExchange+Additions.h"
 #import "AMQPChannel.h"
+#import "AMQPQueue.h"
 
 #import "amqp.h"
 #import "amqp_framing.h"
@@ -94,6 +95,39 @@
 	amqp_bytes_free(amqp_bytes);
 	[channel.connection checkLastOperation:@"Failed to publish message"];
     
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+- (void)rpcCall:(NSString *)method
+      messageID:(NSString *)messageID
+        payload:(NSString *)body
+  correlationID:(NSString *)correlationID
+  callbackQueue:(AMQPQueue *)callbackQueue
+{
+    const amqp_basic_properties_t properties = (amqp_basic_properties_t) {
+        ._flags     = (AMQP_BASIC_MESSAGE_ID_FLAG       |
+                       AMQP_BASIC_TYPE_FLAG             |
+                       AMQP_BASIC_CONTENT_TYPE_FLAG     |
+                       AMQP_BASIC_CORRELATION_ID_FLAG   |
+                       AMQP_BASIC_REPLY_TO_FLAG),
+        .type       = amqp_cstring_bytes([method UTF8String]),
+        .message_id = amqp_cstring_bytes([messageID UTF8String]),
+        .content_type = amqp_cstring_bytes([@"t" UTF8String]),
+        .correlation_id = amqp_cstring_bytes([correlationID UTF8String]),
+        .reply_to = callbackQueue.internalQueue
+    };
+    
+    amqp_basic_publish(channel.connection.internalConnection,
+                       channel.internalChannel,
+                       exchange,
+                       amqp_cstring_bytes("rpc_queue"),
+                       NO,
+                       NO,
+                       &properties,
+                       amqp_cstring_bytes([body UTF8String]));
+
+    [channel.connection checkLastOperation:@"RPC call Invocation failed."];
 }
 
 @end

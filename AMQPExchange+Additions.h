@@ -10,6 +10,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+@class AMQPQueue;
 @interface AMQPExchange(Additions)
 
 - (void)publishMessage:(NSString *)body messageID:(NSString *)messageID usingRoutingKey:(NSString *)theRoutingKey;
@@ -23,5 +24,11 @@
              messageID:(NSString *)messageID
            payloadData:(NSData *)body
        usingRoutingKey:(NSString *)theRoutingKey;
+
+- (void)rpcCall:(NSString *)method
+      messageID:(NSString *)messageID
+        payload:(NSString *)body
+  correlationID:(NSString *)correlationID
+  callbackQueue:(AMQPQueue *)callbackQueue;
 
 @end
