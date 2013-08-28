@@ -7,6 +7,7 @@
 //
 
 #import "CTXTTLManager.h"
+#import <dispatch/source.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,8 +70,8 @@
         
         [_objects addObject:object];
         
-        NSObject<OS_dispatch_source> *timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _lockQueue);
-        [_timers addObject:timer];
+        dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _lockQueue);
+        [_timers addObject:[NSValue valueWithPointer:timer]];
         
         dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, ttl * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
         dispatch_source_set_event_handler(timer, ^{
@@ -91,7 +92,7 @@
     dispatch_sync(_lockQueue, ^{
         NSUInteger indexOfObject = [_objects indexOfObject:object];
         if(indexOfObject != NSNotFound) {
-            NSObject<OS_dispatch_source> *timer = [_timers objectAtIndex:indexOfObject];
+            dispatch_source_t timer = [[_timers objectAtIndex:indexOfObject] pointerValue];
             dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, ttl * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
             updated = YES;
         }
@@ -133,7 +134,7 @@
         return;
     }
     
-    NSObject<OS_dispatch_source> *timer = [_timers objectAtIndex:indexOfObject];
+    dispatch_source_t timer = [[_timers objectAtIndex:indexOfObject] pointerValue];
     dispatch_source_cancel(timer);
     
     [_objects removeObjectAtIndex:indexOfObject];
@@ -145,8 +146,8 @@
 - (void)_performCleanup
 {
     dispatch_sync(_lockQueue, ^{ @autoreleasepool {
-        [_timers enumerateObjectsUsingBlock:^(NSObject<OS_dispatch_source> *timer, NSUInteger idx, BOOL *stop) {
-            dispatch_source_cancel(timer);
+        [_timers enumerateObjectsUsingBlock:^(NSValue *timer, NSUInteger idx, BOOL *stop) {
+            dispatch_source_cancel([timer pointerValue]);
         }];
         [_timers removeAllObjects];
         [_objects removeAllObjects];
