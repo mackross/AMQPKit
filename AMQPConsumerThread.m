@@ -141,11 +141,11 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 - (void)main
 {
     @autoreleasepool {
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<starting: consumer_thread: (%p) topic: %@>", self, _topic);
+        NSLog(@"<starting: consumer_thread: (%p) topic: %@>", self, _topic);
         NSError *error = nil;
         if(![self _setup:&error]) {
-            CTXLogError(CTXLogContextMessageBroker, @"<starting: consumer_thread: (%p) topic: %@ :: failed to start>", self, _topic);
-            CTXLogError(CTXLogContextMessageBroker, @"<starting: consumer_thread: (%p) topic: %@ :: error %@>", self, _topic, error);
+            NSLog(@"<starting: consumer_thread: (%p) topic: %@ :: failed to start>", self, _topic);
+            NSLog(@"<starting: consumer_thread: (%p) topic: %@ :: error %@>", self, _topic, error);
             if([delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
                 dispatch_sync(_callbackQueue, ^{
                     [delegate amqpConsumerThread:self didFailWithError:error];
@@ -164,13 +164,13 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             });
         }
 
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<started: consumer_thread: (%p) topic: %@>", self, _topic);
+        NSLog(@"<started: consumer_thread: (%p) topic: %@>", self, _topic);
         
         while(![self isCancelled]) {
             @autoreleasepool {
                 AMQPMessage *message = [self _consume];
                 if(message) {
-                    CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread: (%p) topic: %@ received message>", self, _topic);
+                    NSLog(@"<consumer_thread: (%p) topic: %@ received message>", self, _topic);
                     dispatch_async(_callbackQueue, ^{
                         [delegate amqpConsumerThreadReceivedNewMessage:message];
                     });
@@ -178,9 +178,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             }
         }
         
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<stopping: consumer_thread: (%p) topic: %@>", self, _topic);
+        NSLog(@"<stopping: consumer_thread: (%p) topic: %@>", self, _topic);
         [self _tearDown];
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<stopped: consumer_thread: (%p) topic: %@>", self, _topic);
+        NSLog(@"<stopped: consumer_thread: (%p) topic: %@>", self, _topic);
         
         dispatch_sync(_lockQueue, ^{
             _started = NO;
@@ -255,15 +255,15 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     NSString *vhost     = [_configuration objectForKey:@"vhost"];
     
     @try {
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic: %@ :: connecting to host (%@:%d)...>", self, _topic, host, port);
+        NSLog(@"<consumer_thread (%p) topic: %@ :: connecting to host (%@:%d)...>", self, _topic, host, port);
 
         _connection = [[AMQPConnection alloc] init];
         [_connection connectToHost:host onPort:port];
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic: %@ :: connected!>", self, _topic);
+        NSLog(@"<consumer_thread (%p) topic: %@ :: connected!>", self, _topic);
         
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic: %@ :: authenticating user (%@)...>", self, _topic, username);
+        NSLog(@"<consumer_thread (%p) topic: %@ :: authenticating user (%@)...>", self, _topic, username);
         [_connection loginAsUser:username withPassword:password onVHost:vhost];
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic: %@ :: authenticated!>", self, _topic);
+        NSLog(@"<consumer_thread (%p) topic: %@ :: authenticated!>", self, _topic);
         
         _channel = [[_connection openChannel] retain];
         [_ttlManager addObject:kCheckConnectionToken ttl:kCheckConnectionInterval];
@@ -382,7 +382,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             }
         }
         @catch (NSException *exception) {
-            CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+            NSLog(@"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
         }
         [_exchange release];    _exchange = nil;
         [_queue release];       _queue = nil;
@@ -394,7 +394,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         }
     }
     @catch (NSException *exception) {
-        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+        NSLog(@"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
     }
     @finally {
         [_connection release];
@@ -413,7 +413,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 //        [_connection release], _connection = nil;
 //    }
 //    @catch (NSException *exception) {
-//        CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
+//        NSLog(@"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
 //    }
 //    @finally {
 //        [_ttlManager removeAllObjects];
@@ -463,11 +463,11 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                 ioctl(sock, FIONREAD, &bytesToRead);
 
                 if(ret == -1) {
-                    CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic %@ :: select() error (%s)>", self, _topic, strerror(errno));
+                    NSLog(@"<consumer_thread (%p) topic %@ :: select() error (%s)>", self, _topic, strerror(errno));
                 }
                 if(_checkConnectionTimerFired) {
                     _checkConnectionTimerFired = NO;
-//                    CTXLogVerbose(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic: %@ :: heartbeat>", self, _topic);
+//                    NSLog(@"<consumer_thread (%p) topic: %@ :: heartbeat>", self, _topic);
                     
                     // If we're idle for a long long time,
                     // the outer autorelease pool on consume will never drain because we're stuck here
@@ -502,7 +502,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         ////////////////////////////////////////////////////////////////////////////////
 		result = amqp_simple_wait_frame(connection, &frame);
 		if(result < 0) {
-            CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic %@ :: frame #1 error (%d)>", self, _topic, result);
+            NSLog(@"<consumer_thread (%p) topic %@ :: frame #1 error (%d)>", self, _topic, result);
             NSLog(@"frame #1 resut = %d", result);
             goto HandleFrameError;
         }
@@ -519,7 +519,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         ////////////////////////////////////////////////////////////////////////////////
 		result = amqp_simple_wait_frame(connection, &frame);
 		if(result < 0) {
-            CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic %@ :: frame #2 error (%d)>", self, _topic, result);
+            NSLog(@"<consumer_thread (%p) topic %@ :: frame #2 error (%d)>", self, _topic, result);
             goto HandleFrameError;
         }
 		 
@@ -540,7 +540,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 		while(receivedBytes < bodySize) {
 			result = amqp_simple_wait_frame(connection, &frame);
 			if(result < 0) {
-                CTXLogError(CTXLogContextMessageBroker, @"<consumer_thread (%p) topic %@ :: frame #3 error (%d)>", self, _topic, result);
+                NSLog(@"<consumer_thread (%p) topic %@ :: frame #3 error (%d)>", self, _topic, result);
                 goto HandleFrameError;
             }
 			
@@ -622,19 +622,19 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         
         _reconnectionCount++;
         
-        CTXLogVerbose(CTXLogContextMessageBroker, @"<reconnect: consumer_thread: (%p) topic: %@ :: reconnection attempt #%d...>", self, _topic, _reconnectionCount);
+        NSLog(@"<reconnect: consumer_thread: (%p) topic: %@ :: reconnection attempt #%d...>", self, _topic, _reconnectionCount);
         
         [self _tearDown];
         
         NSError *error = nil;
         if([self _setup:&error]) {
-            CTXLogVerbose(CTXLogContextMessageBroker, @"<reconnect: consumer_thread: (%p) topic: %@ :: reconnected successfully!>", self, _topic);
+            NSLog(@"<reconnect: consumer_thread: (%p) topic: %@ :: reconnected successfully!>", self, _topic);
             success = YES;
             break;
         }
         else {
-            CTXLogError(CTXLogContextMessageBroker, @"<reconnect: consumer_thread: (%p) topic: %@ :: failed to reconnect>", self, _topic);
-            CTXLogError(CTXLogContextMessageBroker, @"<reconnect: consumer_thread: (%p) topic: %@ :: error %@>", self, _topic, error);
+            NSLog(@"<reconnect: consumer_thread: (%p) topic: %@ :: failed to reconnect>", self, _topic);
+            NSLog(@"<reconnect: consumer_thread: (%p) topic: %@ :: error %@>", self, _topic, error);
             [NSThread sleepForTimeInterval:kReconnectionInterval];
         }
     }

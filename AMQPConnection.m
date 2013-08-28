@@ -134,7 +134,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 ////////////////////////////////////////////////////////////////////////////////
 - (BOOL)checkConnection
 {
-//    CTXLogVerbose(CTXLogContextMessageBroker, @"<amqp_connection (%p) :: checking connection...>", self);
+//    NSLog(@"<amqp_connection (%p) :: checking connection...>", self);
     
     int result = -1;
     
@@ -152,7 +152,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     char buffer[128];
     result = recv(socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
     if(result >= 0) {
-        CTXLogError(CTXLogContextMessageBroker, @"<amqp_connection (%p) :: connection closed!>", self);
+        NSLog(@"<amqp_connection (%p) :: connection closed!>", self);
         return NO;
     }
     return YES;
