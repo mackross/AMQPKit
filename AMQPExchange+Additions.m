@@ -70,7 +70,7 @@
        usingRoutingKey:(NSString *)theRoutingKey
 {
     if(body.length == 0) {
-        DDLogError(@"payload is empty!!!");
+        NSLog(@"payload is empty!!!");
         return;
     }
     const amqp_basic_properties_t properties = (amqp_basic_properties_t) {
