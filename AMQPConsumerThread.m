@@ -399,10 +399,10 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     @finally {
         [_connection release];
         _connection = nil;
+        [_ttlManager removeAllObjects];
+        [_ttlManager release];
+        _ttlManager = nil;
     }
-
-    [_ttlManager removeAllObjects];
-    _ttlManager = nil;
 
 //    @try {
 //        [_consumer release], _consumer = nil;
