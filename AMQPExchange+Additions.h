@@ -31,4 +31,10 @@
   correlationID:(NSString *)correlationID
   callbackQueue:(AMQPQueue *)callbackQueue;
 
+- (void)rpcCall:(NSString *)method
+      messageID:(NSString *)messageID
+    payloadData:(NSData *)body
+  correlationID:(NSString *)correlationID
+  callbackQueue:(AMQPQueue *)callbackQueue;
+
 @end

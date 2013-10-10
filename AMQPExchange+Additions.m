@@ -130,4 +130,41 @@
     [channel.connection checkLastOperation:@"RPC call Invocation failed."];
 }
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+- (void)rpcCall:(NSString *)method
+      messageID:(NSString *)messageID
+    payloadData:(NSData *)body
+  correlationID:(NSString *)correlationID
+  callbackQueue:(AMQPQueue *)callbackQueue
+{
+    const amqp_basic_properties_t properties = (amqp_basic_properties_t) {
+        ._flags     = (AMQP_BASIC_MESSAGE_ID_FLAG       |
+                       AMQP_BASIC_TYPE_FLAG             |
+                       AMQP_BASIC_CONTENT_TYPE_FLAG     |
+                       AMQP_BASIC_CORRELATION_ID_FLAG   |
+                       AMQP_BASIC_REPLY_TO_FLAG),
+        .type       = amqp_cstring_bytes([method UTF8String]),
+        .message_id = amqp_cstring_bytes([messageID UTF8String]),
+        .content_type = amqp_cstring_bytes([@"t" UTF8String]),
+        .correlation_id = amqp_cstring_bytes([correlationID UTF8String]),
+        .reply_to = callbackQueue.internalQueue
+    };
+    
+    amqp_bytes_t amqp_body = amqp_bytes_malloc(body.length);
+    [body getBytes:amqp_body.bytes];
+    
+    amqp_basic_publish(channel.connection.internalConnection,
+                       channel.internalChannel,
+                       exchange,
+                       amqp_cstring_bytes("rpc_queue"),
+                       NO,
+                       NO,
+                       &properties,
+                       amqp_body);
+    
+    amqp_bytes_free(amqp_body);
+    [channel.connection checkLastOperation:@"RPC call Invocation failed."];
+}
+
 @end
