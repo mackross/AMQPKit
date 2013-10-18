@@ -9,16 +9,6 @@
 #import "CTXTTLManager.h"
 #import <dispatch/source.h>
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-@interface CTXTTLManager()
-
-- (void)_cancelTimerForObject:(id)object;
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 @implementation CTXTTLManager
 {
     dispatch_queue_t    _lockQueue;
@@ -28,28 +18,22 @@
 
 #pragma mark - Dealloc and Initialization
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)dealloc
 {
     [self _performCleanup];
 }
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (id)initWithDelegate:(id<CTXTTLManagerDelegate>)delegate
 {
-    if((self = [self init])) {
+    if ((self = [self init])) {
         _delegate = delegate;
     }
     return self;
 }
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (id)init
 {
-    if((self = [super init])) {
-        _lockQueue  = dispatch_queue_create("com.ef.ctx.ttl-manager.lock", NULL);
+    if ((self = [super init])) {
+        _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.amqp.ttlmanager.lock", NULL);
         _objects    = [[NSMutableArray alloc] init];
         _timers     = [[NSMutableArray alloc] init];
     }
@@ -58,13 +42,10 @@
 
 #pragma mark - Public Methods
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)addObject:(id)object ttl:(NSTimeInterval)ttl
 {
     dispatch_sync(_lockQueue, ^{
-//        NSAssert([_objects indexOfObject:object] == NSNotFound, @"object %@ already exists", object);
-        if([_objects indexOfObject:object] != NSNotFound) {
+        if ([_objects indexOfObject:object] != NSNotFound) {
             return;
         }
         
@@ -84,14 +65,12 @@
     });
 }
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (BOOL)updateObject:(id)object ttl:(NSTimeInterval)ttl
 {
     __block BOOL updated = NO;
     dispatch_sync(_lockQueue, ^{
         NSUInteger indexOfObject = [_objects indexOfObject:object];
-        if(indexOfObject != NSNotFound) {
+        if (indexOfObject != NSNotFound) {
             dispatch_source_t timer = [[_timers objectAtIndex:indexOfObject] pointerValue];
             dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, ttl * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
             updated = YES;
@@ -100,8 +79,6 @@
     return updated;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)removeObject:(id)object
 {
     dispatch_sync(_lockQueue, ^{
@@ -109,8 +86,6 @@
     });
 }
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)removeAllObjects
 {
     dispatch_sync(_lockQueue, ^{ @autoreleasepool {
@@ -122,15 +97,13 @@
     });
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Needs to be wrapped with the appropriate locking mechanism
-////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Private Methods
+
 - (void)_cancelTimerForObject:(id)object
 {
     NSUInteger indexOfObject = [_objects indexOfObject:object];
-//    NSAssert(indexOfObject != NSNotFound, @"object %@ does not exist", object);
     
-    if(indexOfObject == NSNotFound) {
+    if (indexOfObject == NSNotFound) {
         return;
     }
     
@@ -141,8 +114,6 @@
     [_timers removeObjectAtIndex:indexOfObject];
 }
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)_performCleanup
 {
     dispatch_sync(_lockQueue, ^{ @autoreleasepool {

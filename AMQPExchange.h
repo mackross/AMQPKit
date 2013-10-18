@@ -28,7 +28,6 @@
 @interface AMQPExchange : AMQPObject
 {
 	amqp_bytes_t exchange;
-	
 	AMQPChannel *channel;
 }
 

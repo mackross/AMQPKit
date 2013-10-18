@@ -30,7 +30,6 @@
 @interface AMQPQueue : AMQPObject
 {
 	amqp_bytes_t queueName;
-	
 	AMQPChannel *channel;
 }
 

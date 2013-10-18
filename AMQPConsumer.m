@@ -46,7 +46,7 @@
 
 - (id)initForQueue:(AMQPQueue*)theQueue onChannel:(AMQPChannel*)theChannel useAcknowledgements:(BOOL)ack isExclusive:(BOOL)exclusive receiveLocalMessages:(BOOL)local
 {
-	if(self = [super init])
+	if (self = [super init])
 	{
 		channel = [theChannel retain];
 		queue = [theQueue retain];
@@ -88,12 +88,12 @@
 		
 		// Frame #1: method frame with method basic.deliver
 		result = amqp_simple_wait_frame(channel.connection.internalConnection, &frame);
-		if(result < 0) {
+		if (result < 0) {
             NSLog(@"result = %d", result);
             return nil;
         }
 		
-		if(frame.frame_type != AMQP_FRAME_METHOD || frame.payload.method.id != AMQP_BASIC_DELIVER_METHOD) {
+		if (frame.frame_type != AMQP_FRAME_METHOD || frame.payload.method.id != AMQP_BASIC_DELIVER_METHOD) {
             continue;
         }
 		
@@ -101,12 +101,12 @@
 		
 		// Frame #2: header frame containing body size
 		result = amqp_simple_wait_frame(channel.connection.internalConnection, &frame);
-		if(result < 0) {
+		if (result < 0) {
             NSLog(@"result = %d", result);
             return nil;
         }
 		
-		if(frame.frame_type != AMQP_FRAME_HEADER)
+		if (frame.frame_type != AMQP_FRAME_HEADER)
 		{
             NSLog(@"frame.frame_type != AMQP_FRAME_HEADER");
 			return nil;
@@ -122,12 +122,12 @@
 		while(receivedBytes < bodySize)
 		{
 			result = amqp_simple_wait_frame(channel.connection.internalConnection, &frame);
-			if(result < 0) {
+			if (result < 0) {
                 NSLog(@"result = %d", result);
                 return nil;
             }
 			
-			if(frame.frame_type != AMQP_FRAME_BODY)
+			if (frame.frame_type != AMQP_FRAME_BODY)
 			{
                 NSLog(@"frame.frame_type != AMQP_FRAME_BODY");
 

@@ -22,8 +22,6 @@
 # import "amqp.h"
 
 @interface AMQPObject : NSObject
-{
-}
 
 - (NSString*)errorDescriptionForReply:(amqp_rpc_reply_t)reply;
 
