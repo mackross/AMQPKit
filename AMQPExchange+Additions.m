@@ -106,7 +106,7 @@
          correlationID:(NSString *)correlationID
          callbackQueue:(NSString *)callbackQueue
 {
-    const amqp_basic_properties_t properties = (amqp_basic_properties_t) {
+    amqp_basic_properties_t properties = (amqp_basic_properties_t) {
         ._flags     = (AMQP_BASIC_MESSAGE_ID_FLAG       |
                        AMQP_BASIC_TYPE_FLAG             |
                        AMQP_BASIC_CONTENT_TYPE_FLAG     |
@@ -123,12 +123,12 @@
     }
     
     amqp_bytes_t amqp_body = amqp_bytes_malloc(body.length);
-    [body getBytes:amqp_bytes.bytes];
+    [body getBytes:amqp_body.bytes];
     
     amqp_basic_publish(channel.connection.internalConnection,
                        channel.internalChannel,
                        exchange,
-                       amqp_cstring_bytes([routingKey UTF8String]),,
+                       amqp_cstring_bytes([routingKey UTF8String]),
                        NO,
                        NO,
                        &properties,
