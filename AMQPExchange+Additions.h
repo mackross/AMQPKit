@@ -25,16 +25,11 @@
            payloadData:(NSData *)body
        usingRoutingKey:(NSString *)theRoutingKey;
 
-- (void)rpcCall:(NSString *)method
-      messageID:(NSString *)messageID
-        payload:(NSString *)body
-  correlationID:(NSString *)correlationID
-  callbackQueue:(AMQPQueue *)callbackQueue;
-
-- (void)rpcCall:(NSString *)method
-      messageID:(NSString *)messageID
-    payloadData:(NSData *)body
-  correlationID:(NSString *)correlationID
-  callbackQueue:(AMQPQueue *)callbackQueue;
+- (void)publishMessage:(NSString *)messageType
+             messageID:(NSString *)messageID
+           payloadData:(NSData *)payload
+       usingRoutingKey:(NSString *)routingKey
+         correlationID:(NSString *)correlationID
+         callbackQueue:(NSString *)callbackQueue;
 
 @end
