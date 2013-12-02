@@ -162,7 +162,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                 if (message) {
                     NSLog(@"<consumer_thread: (%p) topic: %@ received message>", self, _topic);
                     dispatch_async(_callbackQueue, ^{
-                        [delegate amqpConsumerThreadReceivedNewMessage:message];
+                        [delegate amqpConsumerThread:self didReceiveNewMessage:message];
                     });
                 }
             }
