@@ -1,15 +1,15 @@
 //
-//  CTXTTLManager.m
-//  SMARTClassroom
+//  AMQPTTLManager.m
+//  librabbitmq-objc
 //
 //  Created by Pedro Gomes on 29/11/2012.
 //  Copyright (c) 2012 EF Education First. All rights reserved.
 //
 
-#import "CTXTTLManager.h"
+#import "AMQPTTLManager.h"
 #import <dispatch/source.h>
 
-@implementation CTXTTLManager
+@implementation AMQPTTLManager
 {
     dispatch_queue_t    _lockQueue;
     NSMutableArray      *_objects;
@@ -23,7 +23,7 @@
     [self _performCleanup];
 }
 
-- (id)initWithDelegate:(id<CTXTTLManagerDelegate>)delegate
+- (id)initWithDelegate:(id<AMQPTTLManagerDelegate>)delegate
 {
     if ((self = [self init])) {
         _delegate = delegate;
