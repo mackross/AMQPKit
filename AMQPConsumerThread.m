@@ -436,7 +436,10 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 	amqp_basic_properties_t *properties;
     amqp_connection_state_t connection = _channel.connection.internalConnection;
 
-	NSAssert(connection != NULL, @"Connection must be valid.");
+    if (!connection) {
+        return nil;
+    }
+    
 	amqp_maybe_release_buffers(connection);
 
     AMQPMessage *message = nil;
@@ -607,7 +610,6 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             [self.delegate amqpConsumerThread:self reportedError:error];
         }
     });
-    [self cancel];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
