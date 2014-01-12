@@ -29,7 +29,7 @@
 
 - (id)init
 {
-	if(self = [super init])
+	if (self = [super init])
 	{
 		channel = -1;
 		connection = nil;
@@ -56,7 +56,7 @@
 }
 - (void)close
 {
-//    if([connection checkConnection]) {
+//    if ([connection checkConnection]) {
         amqp_channel_close(connection.internalConnection, channel, AMQP_REPLY_SUCCESS);
 //    }
 //    else {

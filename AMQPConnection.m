@@ -23,21 +23,15 @@
 //#import <sys/poll.h>
 
 #import "AMQPConnection.h"
+#import "AMQPChannel.h"
 
 #import "amqp.h"
 #import "amqp_framing.h"
 
-#import "AMQPChannel.h"
-
-////////////////////////////////////////////////////////////////////////////////
-// Exceptions
-////////////////////////////////////////////////////////////////////////////////
 NSString *const kAMQPConnectionException    = @"AMQPConnectionException";
 NSString *const kAMQPLoginException         = @"AMQPLoginException";
 NSString *const kAMQPOperationException     = @"AMQPException";
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 @implementation AMQPConnection
 
 @synthesize internalConnection = connection;
@@ -45,7 +39,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (id)init
 {
-	if(self = [super init])
+	if (self = [super init])
 	{
 		connection = amqp_new_connection();
 		nextChannel = 1;
@@ -69,19 +63,17 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     fcntl(socketFD, F_SETFL, O_ASYNC);
     fcntl(socketFD, F_SETNOSIGPIPE, 1);
 
-    ////////////////////////////////////////////////////////////////////////////////
     // SETUP TCP KEEPALIVE
-    ////////////////////////////////////////////////////////////////////////////////
 //    int optval = 1;
 //    socklen_t optlen = sizeof(optval);
-//    if(setsockopt(socketFD, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen) < 0) {
+//    if (setsockopt(socketFD, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen) < 0) {
 //        NSLog(@"<error: failed to set SO_KEEPALIVE>");
 //    }
-//    if(getsockopt(socketFD, SOL_SOCKET, SO_KEEPALIVE, &optval, &optlen) < 0) {
+//    if (getsockopt(socketFD, SOL_SOCKET, SO_KEEPALIVE, &optval, &optlen) < 0) {
 //        NSLog(@"<error: failed to check value for SO_KEEPALIVE>");
 //    }
 	
-	if(socketFD < 0)
+	if (socketFD < 0)
 	{
 		[NSException raise:kAMQPConnectionException format:@"Unable to open socket to host %@ on port %d", host, port];
 	}
@@ -92,7 +84,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 {
 	amqp_rpc_reply_t reply = amqp_login(connection, [vhost UTF8String], 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, [username UTF8String], [password UTF8String]);
 	
-	if(reply.reply_type != AMQP_RESPONSE_NORMAL)
+	if (reply.reply_type != AMQP_RESPONSE_NORMAL)
 	{
 		[NSException raise:kAMQPLoginException format:@"Failed to login to server as user %@ on vhost %@ using password %@: %@", username, vhost, password, [self errorDescriptionForReply:reply]];
 	}
@@ -102,7 +94,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 	amqp_rpc_reply_t reply = amqp_connection_close(connection, AMQP_REPLY_SUCCESS);
 	close(socketFD);
 	
-	if(reply.reply_type != AMQP_RESPONSE_NORMAL)
+	if (reply.reply_type != AMQP_RESPONSE_NORMAL)
 	{
 		[NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: %@", [self errorDescriptionForReply:reply]];
 	}
@@ -113,7 +105,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 {
 	amqp_rpc_reply_t reply = amqp_get_rpc_reply(connection);
 	
-	if(reply.reply_type != AMQP_RESPONSE_NORMAL)
+	if (reply.reply_type != AMQP_RESPONSE_NORMAL)
 	{
 		[NSException raise:kAMQPOperationException format:@"%@: %@", context, [self errorDescriptionForReply:reply]];
 	}
@@ -145,13 +137,13 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 //    
 //    result = poll(&pfd, 1, 100);
 //    NSLog(@"poll result = %d", result);
-//    if(result <= 0) {
+//    if (result <= 0) {
 //        return;
 //    }
     
     char buffer[128];
     result = recv(socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
-    if(result >= 0) {
+    if (result >= 0) {
         NSLog(@"<amqp_connection (%p) :: connection closed!>", self);
         return NO;
     }

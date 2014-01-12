@@ -19,14 +19,12 @@
 
 #import <Foundation/Foundation.h>
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 @class AMQPConsumerThread;
 @class AMQPMessage;
 @protocol AMQPConsumerThreadDelegate <NSObject>
 
 @required
-- (void)amqpConsumerThreadReceivedNewMessage:(AMQPMessage *)message;
+- (void)amqpConsumerThread:(AMQPConsumerThread *)thread didReceiveNewMessage:(AMQPMessage *)message;
 - (void)amqpConsumerThread:(AMQPConsumerThread *)thread didFailWithError:(NSError *)error;
 - (void)amqpConsumerThread:(AMQPConsumerThread *)thread reportedError:(NSError *)error;
 

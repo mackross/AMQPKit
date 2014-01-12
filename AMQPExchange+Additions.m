@@ -1,6 +1,6 @@
 //
 //  AMQPExchange+Additions.m
-//  SMARTClassroom
+//  Objective-C wrapper for librabbitmq-c
 //
 //  Created by Pedro Gomes on 27/11/2012.
 //  Copyright (c) 2012 EF Education First. All rights reserved.
@@ -13,12 +13,8 @@
 #import "amqp.h"
 #import "amqp_framing.h"
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 @implementation AMQPExchange(Additions)
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)publishMessage:(NSString *)body messageID:(NSString *)messageID usingRoutingKey:(NSString *)theRoutingKey
 {
     const amqp_basic_properties_t properties = (amqp_basic_properties_t){
@@ -62,14 +58,12 @@
 	[channel.connection checkLastOperation:@"Failed to publish message"];
 }
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)publishMessage:(NSString *)messageType
              messageID:(NSString *)messageID
            payloadData:(NSData *)body
        usingRoutingKey:(NSString *)theRoutingKey
 {
-    if(body.length == 0) {
+    if (body.length == 0) {
         NSLog(@"payload is empty!!!");
         return;
     }
@@ -97,8 +91,6 @@
     
 }
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 - (void)publishMessage:(NSString *)messageType
              messageID:(NSString *)messageID
            payloadData:(NSData *)body
@@ -117,7 +109,7 @@
         .correlation_id = amqp_cstring_bytes([correlationID UTF8String]),
     };
     
-    if(callbackQueue) {
+    if (callbackQueue) {
         properties._flags |= AMQP_BASIC_REPLY_TO_FLAG;
         properties.reply_to = amqp_cstring_bytes([callbackQueue UTF8String]);
     }

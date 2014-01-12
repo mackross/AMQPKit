@@ -21,16 +21,13 @@
 
 #import "AMQPConsumerThreadDelegate.h"
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 @class AMQPConnection;
 @class AMQPChannel;
 @class AMQPQueue;
 @class AMQPConsumer;
 @class AMQPMessage;
+
 @interface AMQPConsumerThread : NSThread
-{
-}
 
 @property (nonatomic, assign) NSObject<AMQPConsumerThreadDelegate> *delegate;
 @property (nonatomic, readonly, copy) NSString *topic;

@@ -24,7 +24,6 @@
 # import "AMQPConnection.h"
 # import "AMQPObject.h"
 
-
 @interface AMQPChannel : AMQPObject
 {
 	amqp_channel_t channel;
