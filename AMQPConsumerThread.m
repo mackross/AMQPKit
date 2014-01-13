@@ -48,11 +48,8 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     AMQPTTLManager   *_ttlManager;
     BOOL            _checkConnectionTimerFired;
     NSUInteger      _reconnectionCount;
-    
     BOOL            _connectionErrorWasRaised;
 }
-
-@property (nonatomic, copy) NSString *topic;
 
 - (BOOL)_setup:(NSError **)error;
 - (void)_tearDown;
@@ -71,7 +68,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 {
     NSDictionary        *_configuration;
     NSString            *_exchangeKey;
-//    NSString            *_topic;
+    NSString            *_topic;
     
     AMQPConnection      *_connection;
     AMQPChannel         *_channel;
@@ -82,18 +79,19 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     dispatch_queue_t    _callbackQueue;
     dispatch_queue_t    _lockQueue;
     
-	NSObject<AMQPConsumerThreadDelegate> *delegate;
-    
     BOOL                _started;
 }
-
-@synthesize delegate;
 
 #pragma mark - Dealloc and Initialization
 
 - (void)dealloc
 {
     [self _tearDown];
+    
+    [_configuration release];
+    [_exchangeKey release];
+    [_topic release];
+    _delegate = nil;
     
     dispatch_release(_callbackQueue);
     dispatch_release(_lockQueue);
@@ -111,7 +109,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         _configuration  = [configuration retain];
         _exchangeKey    = [exchangeKey copy];
         _topic          = [topic copy];
-        delegate        = theDelegate;
+        _delegate        = theDelegate;
         
         if (!callbackQueue) {
             callbackQueue = dispatch_get_main_queue();
@@ -136,9 +134,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         if (![self _setup:&error]) {
             NSLog(@"<starting: consumer_thread: (%p) topic: %@ :: failed to start>", self, _topic);
             NSLog(@"<starting: consumer_thread: (%p) topic: %@ :: error %@>", self, _topic, error);
-            if ([delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
+            if ([self.delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
                 dispatch_sync(_callbackQueue, ^{
-                    [delegate amqpConsumerThread:self didFailWithError:error];
+                    [self.delegate amqpConsumerThread:self didFailWithError:error];
                 });
             }
             return;
@@ -148,9 +146,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             _started = YES;
         });
 
-        if ([delegate respondsToSelector:@selector(amqpConsumerThreadDidStart:)]) {
+        if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStart:)]) {
             dispatch_sync(_callbackQueue, ^{
-                [delegate amqpConsumerThreadDidStart:self];
+                [self.delegate amqpConsumerThreadDidStart:self];
             });
         }
 
@@ -162,7 +160,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                 if (message) {
                     NSLog(@"<consumer_thread: (%p) topic: %@ received message>", self, _topic);
                     dispatch_async(_callbackQueue, ^{
-                        [delegate amqpConsumerThread:self didReceiveNewMessage:message];
+                        [self.delegate amqpConsumerThread:self didReceiveNewMessage:message];
                     });
                 }
             }
@@ -176,9 +174,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             _started = NO;
         });
 
-        if ([delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
+        if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
             dispatch_async(_callbackQueue, ^{
-                [delegate amqpConsumerThreadDidStop:self];
+                [self.delegate amqpConsumerThreadDidStop:self];
             });
         }
     }

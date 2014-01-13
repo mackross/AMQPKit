@@ -29,7 +29,7 @@
 
 @interface AMQPConsumerThread : NSThread
 
-@property (nonatomic, assign) NSObject<AMQPConsumerThreadDelegate> *delegate;
+@property (nonatomic, assign) id<AMQPConsumerThreadDelegate> delegate;
 @property (nonatomic, readonly, copy) NSString *topic;
 
 - (id)initWithConfiguration:(NSDictionary *)configuration
