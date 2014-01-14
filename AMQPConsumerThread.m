@@ -104,8 +104,8 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 
 - (void)main
 {
-    // atomicity of _started iVar (as now or as before using a lock queue) does not guarantee critical section fro the entire method.
-    // fix using appropriace lock mechanism and stop method accordingly
+    // atomicity of _started iVar (as now or as before using a lock queue) does not guarantee critical section for the entire method.
+    // fix using appropriace lock mechanism and stop method accordingly (adebortoli 14.01.2014)
     @autoreleasepool {
         NSLog(@"<starting: consumer_thread: (%p) topic: %@>", self, _topic);
         NSError *error = nil;
