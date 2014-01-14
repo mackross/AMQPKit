@@ -2,14 +2,17 @@
 //  AMQPTTLManager.m
 //  librabbitmq-objc
 //
-//  Created by Alberto De Bortoli on 14/01/2014.
+//  Created by Pedro Gomes on 29/11/2012.
 //  Copyright (c) 2012 EF Education First. All rights reserved.
 //
 
-#import <dispatch/source.h>
-
 #import "AMQPTTLManager.h"
-#import "AMQPCommon.h"
+
+@interface AMQPTTLManager()
+
+- (void)_cancelTimerForObject:(id)object;
+
+@end
 
 @implementation AMQPTTLManager
 {
@@ -23,9 +26,6 @@
 - (void)dealloc
 {
     [self _performCleanup];
-#if RABBITMQ_DISPATCH_RETAIN_RELEASE
-    dispatch_release(_lockQueue);
-#endif
 }
 
 - (id)initWithDelegate:(id<AMQPTTLManagerDelegate>)delegate
@@ -33,15 +33,18 @@
     if ((self = [self init])) {
         _delegate = delegate;
     }
+    
     return self;
 }
+
 - (id)init
 {
     if ((self = [super init])) {
-        _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.amqp.ttlmanager.lock", NULL);
+        _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.ttlmanager.lock", NULL);
         _objects    = [[NSMutableArray alloc] init];
         _timers     = [[NSMutableArray alloc] init];
     }
+    
     return self;
 }
 
@@ -56,27 +59,26 @@
         
         [_objects addObject:object];
         
-        dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _lockQueue);
-#if RABBITMQ_DISPATCH_SOURCE_T_CAST_TO_CONST_VOID_STAR_ALLOWED
-        [_timers addObject:[NSValue valueWithPointer:timer]];
-#else
-        [_timers addObject:[NSValue valueWithPointer:(__bridge const void *)(timer)]];
-#endif
-        dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, ttl * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
-        dispatch_source_set_event_handler(timer, ^{
-            dispatch_source_cancel(timer);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate ttlForObjectExpired:object];
-            });
+        NSTimer *timer = [NSTimer timerWithTimeInterval:ttl target:self selector:@selector(onTick:) userInfo:nil repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+        [_timers addObject:timer];
+    });
+}
+
+- (void)onTick:(NSTimer *)timer
+{
+    dispatch_sync(_lockQueue, ^{
+        NSUInteger indexOfTimer = [_timers indexOfObject:timer];
+        if(indexOfTimer == NSNotFound) {
+            return;
+        }
+        
+        id object = [_objects objectAtIndex:indexOfTimer];
+        
+        [self _cancelTimerForObject:object];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate ttlForObjectExpired:object];
         });
-        dispatch_source_set_cancel_handler(timer, ^{
-            NSUInteger indexOfObject = [_objects indexOfObject:object];
-            if (indexOfObject != NSNotFound) {
-                [_timers removeObjectAtIndex:indexOfObject];
-                [_objects removeObject:object];
-            }
-        });
-        dispatch_resume(timer);
     });
 }
 
@@ -85,9 +87,15 @@
     __block BOOL updated = NO;
     dispatch_sync(_lockQueue, ^{
         NSUInteger indexOfObject = [_objects indexOfObject:object];
-        if (indexOfObject != NSNotFound) {
-            dispatch_source_t timer = [[_timers objectAtIndex:indexOfObject] pointerValue];
-            dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, ttl * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
+        if(indexOfObject != NSNotFound) {
+
+            NSTimer *timerToUpdate = [_timers objectAtIndex:indexOfObject];
+            [timerToUpdate invalidate];
+
+            NSTimer *replacementTimer = [NSTimer timerWithTimeInterval:ttl target:self selector:@selector(onTick:) userInfo:nil repeats:NO];
+            [[NSRunLoop mainRunLoop] addTimer:replacementTimer forMode:NSRunLoopCommonModes];
+            [_timers replaceObjectAtIndex:indexOfObject withObject:replacementTimer];
+
             updated = YES;
         }
     });
@@ -97,32 +105,46 @@
 - (void)removeObject:(id)object
 {
     dispatch_sync(_lockQueue, ^{
-        NSUInteger indexOfObject = [_objects indexOfObject:object];
-        if (indexOfObject != NSNotFound) {
-            dispatch_source_t timer = [[_timers objectAtIndex:indexOfObject] pointerValue];
-            dispatch_source_cancel(timer);
-        }
+        [self _cancelTimerForObject:object];
     });
 }
 
 - (void)removeAllObjects
 {
     dispatch_sync(_lockQueue, ^{
-        NSArray *objectsToRemove = [_objects copy];
+        NSArray *objectsToRemove = [NSArray arrayWithArray:_objects];
+        __weak typeof(self) weakSelf = self;
         [objectsToRemove enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
-            [self removeObject:object];
+            [weakSelf _cancelTimerForObject:object];
         }];
     });
 }
 
-#pragma mark - Private Methods
+////////////////////////////////////////////////////////////////////////////////
+// Needs to be wrapped with the appropriate locking mechanism
+////////////////////////////////////////////////////////////////////////////////
+- (void)_cancelTimerForObject:(id)object
+{
+    NSUInteger indexOfObject = [_objects indexOfObject:object];
+    if(indexOfObject == NSNotFound) {
+        return;
+    }
+    
+    NSTimer *timer = [_timers objectAtIndex:indexOfObject];
+    [timer invalidate];
+    [_timers removeObject:timer];
+    
+    [_objects removeObjectAtIndex:indexOfObject];
+}
 
 - (void)_performCleanup
 {
     dispatch_sync(_lockQueue, ^{
-        [_timers enumerateObjectsUsingBlock:^(NSValue *timer, NSUInteger idx, BOOL *stop) {
-            dispatch_source_cancel([timer pointerValue]);
+        [_timers enumerateObjectsUsingBlock:^(NSTimer *timer, NSUInteger idx, BOOL *stop) {
+            [timer invalidate];
         }];
+        [_timers removeAllObjects];
+        [_objects removeAllObjects];
     });
 }
 
