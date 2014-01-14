@@ -26,36 +26,6 @@
 
 @class AMQPConsumer;
 @interface AMQPMessage : NSObject
-{
-	NSString *body;
-    NSData   *data;
-	
-	// from properties
-	NSString *contentType;
-	NSString *contentEncoding;
-	amqp_table_t headers;
-	uint8_t deliveryMode;
-	uint8_t priority;
-	NSString *correlationID;
-	NSString *replyToQueueName;
-	NSString *expiration;
-	NSString *messageID;
-	uint64_t timestamp;
-	NSString *type;
-	NSString *userID;
-	NSString *appID;
-	NSString *clusterID;
-	
-	//from method
-	NSString *consumerTag;
-	uint64_t deliveryTag;
-	BOOL redelivered;
-	NSString *exchangeName;
-	NSString *routingKey;
-	
-	BOOL read;
-	NSDate *receivedAt;
-}
 
 @property (readonly) NSString *body;
 @property (readonly) NSData *data;
@@ -84,10 +54,9 @@
 @property BOOL read;
 @property (readonly) NSDate *receivedAt;
 
-+ (AMQPMessage*)messageFromBody:(amqp_bytes_t)theBody withDeliveryProperties:(amqp_basic_deliver_t*)theDeliveryProperties withMessageProperties:(amqp_basic_properties_t*)theMessageProperties receivedAt:(NSDate*)receiveTimestamp;
++ (AMQPMessage *)messageFromBody:(amqp_bytes_t)theBody withDeliveryProperties:(amqp_basic_deliver_t *)theDeliveryProperties withMessageProperties:(amqp_basic_properties_t *)theMessageProperties receivedAt:(NSDate *)receiveTimestamp;
 
-- (id)initWithBody:(amqp_bytes_t)theBody withDeliveryProperties:(amqp_basic_deliver_t*)theDeliveryProperties withMessageProperties:(amqp_basic_properties_t*)theMessageProperties receivedAt:(NSDate*)receiveTimestamp;
-- (id)initWithAMQPMessage:(AMQPMessage*)theMessage;
-- (void)dealloc;
+- (id)initWithBody:(amqp_bytes_t)theBody withDeliveryProperties:(amqp_basic_deliver_t *)theDeliveryProperties withMessageProperties:(amqp_basic_properties_t *)theMessageProperties receivedAt:(NSDate *)receiveTimestamp;
+- (id)initWithAMQPMessage:(AMQPMessage *)theMessage;
 
 @end
