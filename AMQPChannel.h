@@ -25,18 +25,11 @@
 # import "AMQPObject.h"
 
 @interface AMQPChannel : AMQPObject
-{
-	amqp_channel_t channel;
-	AMQPConnection *connection;
-}
 
 @property (readonly) amqp_channel_t internalChannel;
 @property (readonly) AMQPConnection *connection;
 
-- (id)init;
-- (void)dealloc;
-
-- (void)openChannel:(unsigned int)theChannel onConnection:(AMQPConnection*)theConnection;
+- (void)openChannel:(unsigned int)channel onConnection:(AMQPConnection *)connection;
 - (void)close;
 
 @end

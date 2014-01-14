@@ -22,47 +22,43 @@
 # import "amqp.h"
 # import "amqp_framing.h"
 
-@implementation AMQPChannel
+@interface AMQPChannel ()
 
-@synthesize internalChannel = channel;
-@synthesize connection;
+@property (assign, readwrite) amqp_channel_t internalChannel;
+@property (strong, readwrite) AMQPConnection *connection;
+
+@end
+
+@implementation AMQPChannel
 
 - (id)init
 {
-	if (self = [super init])
-	{
-		channel = -1;
-		connection = nil;
+    self = [super init];
+	if (self) {
+		_internalChannel = -1;
 	}
 	
 	return self;
 }
+
 - (void)dealloc
 {
     [self close];
-	[connection release];
-	
-	[super dealloc];
 }
 
-- (void)openChannel:(unsigned int)theChannel onConnection:(AMQPConnection*)theConnection
+- (void)openChannel:(unsigned int)channel onConnection:(AMQPConnection *)connection
 {
-	connection = [theConnection retain];
-	channel = theChannel;
+	_connection = connection;
+	_internalChannel = channel;
 	
-	amqp_channel_open(connection.internalConnection, channel);
+	amqp_channel_open(_connection.internalConnection, _internalChannel);
 	
-	[connection checkLastOperation:@"Failed to open a channel"];
+	[_connection checkLastOperation:@"Failed to open a channel"];
 }
+
 - (void)close
 {
-//    if ([connection checkConnection]) {
-        amqp_channel_close(connection.internalConnection, channel, AMQP_REPLY_SUCCESS);
-//    }
-//    else {
-//        NSLog(@"<amqp_channel: error: unable to close channel due to disconnection>");
-//        [NSException raise:kAMQPOperationException format:@"%@: %@", @"AMQPChannel", @"Unable to close the channel. Connection lost."];
-//    }
+    amqp_channel_close(_connection.internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
 }
 
 @end
