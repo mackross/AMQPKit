@@ -81,8 +81,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                    delegate:(id)theDelegate
               callbackQueue:(dispatch_queue_t)callbackQueue
 {
-    self = [super init];
-    if (self) {
+    if ((self = [super init])) {
         _configuration  = configuration;
         _exchangeKey    = exchangeKey;
         _topic          = topic;

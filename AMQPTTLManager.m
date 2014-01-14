@@ -10,15 +10,14 @@
 
 @interface AMQPTTLManager()
 
-- (void)_cancelTimerForObject:(id)object;
+@property (nonatomic, strong) NSMutableArray *objects;
+@property (nonatomic, strong) NSMutableArray *timers;
 
 @end
 
 @implementation AMQPTTLManager
 {
     dispatch_queue_t    _lockQueue;
-    NSMutableArray      *_objects;
-    NSMutableArray      *_timers;
 }
 
 #pragma mark - Dealloc and Initialization
@@ -69,7 +68,7 @@
 {
     dispatch_sync(_lockQueue, ^{
         NSUInteger indexOfTimer = [_timers indexOfObject:timer];
-        if(indexOfTimer == NSNotFound) {
+        if (indexOfTimer == NSNotFound) {
             return;
         }
         
@@ -87,8 +86,7 @@
     __block BOOL updated = NO;
     dispatch_sync(_lockQueue, ^{
         NSUInteger indexOfObject = [_objects indexOfObject:object];
-        if(indexOfObject != NSNotFound) {
-
+        if (indexOfObject != NSNotFound) {
             NSTimer *timerToUpdate = [_timers objectAtIndex:indexOfObject];
             [timerToUpdate invalidate];
 
@@ -120,20 +118,16 @@
     });
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Needs to be wrapped with the appropriate locking mechanism
-////////////////////////////////////////////////////////////////////////////////
 - (void)_cancelTimerForObject:(id)object
 {
     NSUInteger indexOfObject = [_objects indexOfObject:object];
-    if(indexOfObject == NSNotFound) {
+    if (indexOfObject == NSNotFound) {
         return;
     }
     
     NSTimer *timer = [_timers objectAtIndex:indexOfObject];
     [timer invalidate];
     [_timers removeObject:timer];
-    
     [_objects removeObjectAtIndex:indexOfObject];
 }
 

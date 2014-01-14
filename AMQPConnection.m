@@ -46,8 +46,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (id)init
 {
-    self = [super init];
-	if (self) {
+    if ((self = [super init])) {
 		_internalConnection = amqp_new_connection();
 		_nextChannel = 1;
 	}

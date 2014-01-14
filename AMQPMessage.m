@@ -38,8 +38,7 @@
         return nil;
     }
 	
-    self = [super init];
-	if (self) {
+    if ((self = [super init])) {
 		_consumerTag = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->consumer_tag);
 		_deliveryTag = theDeliveryProperties->delivery_tag;
 		_redelivered = theDeliveryProperties->redelivered;
@@ -80,8 +79,7 @@
 
 - (id)initWithAMQPMessage:(AMQPMessage *)theMessage
 {
-    self = [super init];
-	if (self) {
+    if ((self = [super init])) {
 		_body = [theMessage.body copy];
         _data = [theMessage.data copy];
 		

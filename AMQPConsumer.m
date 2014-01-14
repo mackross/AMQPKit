@@ -50,8 +50,7 @@
 
 - (id)initForQueue:(AMQPQueue *)theQueue onChannel:(AMQPChannel *)theChannel useAcknowledgements:(BOOL)ack isExclusive:(BOOL)exclusive receiveLocalMessages:(BOOL)local
 {
-    self = [super init];
-	if (self) {
+    if ((self = [super init])) {
 		_channel = theChannel;
 		_queue = theQueue;
 		

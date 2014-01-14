@@ -50,8 +50,7 @@ uint16_t amqp_queue_msg_ttl = 60000;
          isDurable:(BOOL)durable
    getsAutoDeleted:(BOOL)autoDelete
 {
-    self = [super init];
-	if (self) {
+    if ((self = [super init])) {
         amqp_table_t queue_args;
         amqp_table_entry_t entries[2];
         

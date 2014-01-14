@@ -46,8 +46,7 @@
 
 - (id)initExchangeOfType:(NSString *)theType withName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
 {
-    self = [super init];
-	if (self) {
+    if ((self = [super init])) {
 		amqp_exchange_declare(theChannel.connection.internalConnection, theChannel.internalChannel, amqp_cstring_bytes([theName UTF8String]), amqp_cstring_bytes([theType UTF8String]), passive, durable, AMQP_EMPTY_TABLE);
 		
 		[theChannel.connection checkLastOperation:@"Failed to declare exchange"];
