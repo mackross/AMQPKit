@@ -25,6 +25,10 @@
 - (void)dealloc
 {
     [self _performCleanup];
+    
+#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+    dispatch_release(_lockQueue);
+#endif
 }
 
 - (id)initWithDelegate:(id<AMQPTTLManagerDelegate>)delegate
@@ -39,9 +43,14 @@
 - (id)init
 {
     if ((self = [super init])) {
-        _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.ttlmanager.lock", NULL);
         _objects    = [[NSMutableArray alloc] init];
         _timers     = [[NSMutableArray alloc] init];
+        
+        _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.ttlmanager.lock", NULL);
+        
+#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+        dispatch_retain(_lockQueue);
+#endif
     }
     
     return self;
