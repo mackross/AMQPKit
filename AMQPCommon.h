@@ -1,5 +1,5 @@
 //
-//  AMQPWrapper.h
+//  AMQPCommon.h
 //  Objective-C wrapper for librabbitmq-c
 //
 //  Copyright 2009 Max Wolter. All rights reserved.
@@ -17,11 +17,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "AMQPConnection.h"
-#import "AMQPChannel.h"
-#import "AMQPQueue.h"
-#import "AMQPExchange.h"
-#import "AMQPConsumer.h"
-#import "AMQPConsumerThread.h"
-#import "AMQPMessage.h"
-#import "AMQPCommon.h"
+// Workaround for management of dispatch_retain() / dispatch_release() by ARC with iOS 6 / Mac OS X 10.8
+#if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && (!defined(__IPHONE_6_0) || __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)) || \
+    (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && (!defined(__MAC_10_8) || __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8))
+
+#define RABBITMQ_DISPATCH_RETAIN_RELEASE 1
+#define RABBITMQ_DISPATCH_SOURCE_T_CAST_TO_CONST_VOID_STAR_ALLOWED 1
+
+#endif

@@ -6,8 +6,10 @@
 //  Copyright (c) 2012 EF Education First. All rights reserved.
 //
 
-#import "AMQPTTLManager.h"
 #import <dispatch/source.h>
+
+#import "AMQPTTLManager.h"
+#import "AMQPCommon.h"
 
 @implementation AMQPTTLManager
 {
@@ -20,22 +22,31 @@
 
 - (void)dealloc
 {
+#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+    dispatch_release(_lockQueue);
+#endif
     [self _performCleanup];
 }
 
 - (id)initWithDelegate:(id<AMQPTTLManagerDelegate>)delegate
 {
-    if ((self = [self init])) {
+    self = [self init];
+    if (self) {
         _delegate = delegate;
     }
     return self;
 }
 - (id)init
 {
-    if ((self = [super init])) {
-        _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.amqp.ttlmanager.lock", NULL);
+    self = [super init];
+    if (self) {
         _objects    = [[NSMutableArray alloc] init];
         _timers     = [[NSMutableArray alloc] init];
+
+        _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.amqp.ttlmanager.lock", NULL);
+#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+        dispatch_retain(_lockQueue);
+#endif
     }
     return self;
 }
@@ -52,8 +63,11 @@
         [_objects addObject:object];
         
         dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _lockQueue);
+#if RABBITMQ_DISPATCH_SOURCE_T_CAST_TO_CONST_VOID_STAR_ALLOWED
+        [_timers addObject:[NSValue valueWithPointer:timer]];
+#else
         [_timers addObject:[NSValue valueWithPointer:(__bridge const void *)(timer)]];
-        
+#endif
         dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, ttl * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
         dispatch_source_set_event_handler(timer, ^{
             [self _cancelTimerForObject:object];
@@ -116,13 +130,14 @@
 
 - (void)_performCleanup
 {
-    dispatch_sync(_lockQueue, ^{ @autoreleasepool {
-        [_timers enumerateObjectsUsingBlock:^(NSValue *timer, NSUInteger idx, BOOL *stop) {
-            dispatch_source_cancel([timer pointerValue]);
-        }];
-        [_timers removeAllObjects];
-        [_objects removeAllObjects];
-    }
+    dispatch_sync(_lockQueue, ^{
+        @autoreleasepool {
+            [_timers enumerateObjectsUsingBlock:^(NSValue *timer, NSUInteger idx, BOOL *stop) {
+                dispatch_source_cancel([timer pointerValue]);
+            }];
+            [_timers removeAllObjects];
+            [_objects removeAllObjects];
+        }
     });
 }
 
