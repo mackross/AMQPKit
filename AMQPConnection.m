@@ -32,121 +32,103 @@ NSString *const kAMQPConnectionException    = @"AMQPConnectionException";
 NSString *const kAMQPLoginException         = @"AMQPLoginException";
 NSString *const kAMQPOperationException     = @"AMQPException";
 
+@interface AMQPConnection ()
+
+@property (assign, readwrite) amqp_connection_state_t internalConnection;
+
+@end
+
 @implementation AMQPConnection
-
-@synthesize internalConnection = connection;
-
+{
+	int _socketFD;
+	unsigned int _nextChannel;
+}
 
 - (id)init
 {
-	if (self = [super init])
-	{
-		connection = amqp_new_connection();
-		nextChannel = 1;
+    self = [super init];
+	if (self) {
+		_internalConnection = amqp_new_connection();
+		_nextChannel = 1;
 	}
 	
 	return self;
 }
+
 - (void)dealloc
 {
-//	[self disconnect];
+    // this was commented by pdcgomes on 23 January 2013 in [bab486a], to verify
+    // [self disconnect];
 	
-	amqp_destroy_connection(connection);
-	
-	[super dealloc];
+	amqp_destroy_connection(_internalConnection);
 }
 
-- (void)connectToHost:(NSString*)host onPort:(int)port
+- (void)connectToHost:(NSString *)host onPort:(int)port
 {
-	socketFD = amqp_open_socket([host UTF8String], port);
-    fcntl(socketFD, F_SETFL, O_NONBLOCK);
-    fcntl(socketFD, F_SETFL, O_ASYNC);
-    fcntl(socketFD, F_SETNOSIGPIPE, 1);
-
-    // SETUP TCP KEEPALIVE
-//    int optval = 1;
-//    socklen_t optlen = sizeof(optval);
-//    if (setsockopt(socketFD, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen) < 0) {
-//        NSLog(@"<error: failed to set SO_KEEPALIVE>");
-//    }
-//    if (getsockopt(socketFD, SOL_SOCKET, SO_KEEPALIVE, &optval, &optlen) < 0) {
-//        NSLog(@"<error: failed to check value for SO_KEEPALIVE>");
-//    }
-	
-	if (socketFD < 0)
-	{
+	_socketFD = amqp_open_socket([host UTF8String], port);
+    fcntl(_socketFD, F_SETFL, O_NONBLOCK);
+    fcntl(_socketFD, F_SETFL, O_ASYNC);
+    fcntl(_socketFD, F_SETNOSIGPIPE, 1);
+    
+	if (_socketFD < 0) {
 		[NSException raise:kAMQPConnectionException format:@"Unable to open socket to host %@ on port %d", host, port];
 	}
 
-	amqp_set_sockfd(connection, socketFD);
+	amqp_set_sockfd(_internalConnection, _socketFD);
 }
-- (void)loginAsUser:(NSString*)username withPassword:(NSString*)password onVHost:(NSString*)vhost
+
+- (void)loginAsUser:(NSString *)username withPassword:(NSString *)password onVHost:(NSString *)vhost
 {
-	amqp_rpc_reply_t reply = amqp_login(connection, [vhost UTF8String], 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, [username UTF8String], [password UTF8String]);
+	amqp_rpc_reply_t reply = amqp_login(_internalConnection, [vhost UTF8String], 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, [username UTF8String], [password UTF8String]);
 	
-	if (reply.reply_type != AMQP_RESPONSE_NORMAL)
-	{
+	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
 		[NSException raise:kAMQPLoginException format:@"Failed to login to server as user %@ on vhost %@ using password %@: %@", username, vhost, password, [self errorDescriptionForReply:reply]];
 	}
 }
+
 - (void)disconnect
 {
-	amqp_rpc_reply_t reply = amqp_connection_close(connection, AMQP_REPLY_SUCCESS);
-	close(socketFD);
+	amqp_rpc_reply_t reply = amqp_connection_close(_internalConnection, AMQP_REPLY_SUCCESS);
+	close(_socketFD);
 	
-	if (reply.reply_type != AMQP_RESPONSE_NORMAL)
-	{
+	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
 		[NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: %@", [self errorDescriptionForReply:reply]];
 	}
 	
 }
 
-- (void)checkLastOperation:(NSString*)context
+- (void)checkLastOperation:(NSString *)context
 {
-	amqp_rpc_reply_t reply = amqp_get_rpc_reply(connection);
+	amqp_rpc_reply_t reply = amqp_get_rpc_reply(_internalConnection);
 	
-	if (reply.reply_type != AMQP_RESPONSE_NORMAL)
-	{
+	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
 		[NSException raise:kAMQPOperationException format:@"%@: %@", context, [self errorDescriptionForReply:reply]];
 	}
 }
 
-- (AMQPChannel*)openChannel
+- (AMQPChannel *)openChannel
 {
 	AMQPChannel *channel = [[AMQPChannel alloc] init];
-	[channel openChannel:nextChannel onConnection:self];
+	[channel openChannel:_nextChannel onConnection:self];
 	
-	nextChannel++;
+	_nextChannel++;
 
-	return [channel autorelease];
+	return channel;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// TODO: output errors
-////////////////////////////////////////////////////////////////////////////////
 - (BOOL)checkConnection
 {
-//    NSLog(@"<amqp_connection (%p) :: checking connection...>", self);
+    NSLog(@"<amqp_connection (%p) :: checking connection...>", self);
     
     int result = -1;
     
-//    struct pollfd pfd;
-//    pfd.fd = socketFD;
-//    pfd.events = POLLIN | POLLHUP | POLLRDNORM;
-//    pfd.revents = 0;
-//    
-//    result = poll(&pfd, 1, 100);
-//    NSLog(@"poll result = %d", result);
-//    if (result <= 0) {
-//        return;
-//    }
-    
     char buffer[128];
-    result = recv(socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
+    result = recv(_socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
     if (result >= 0) {
         NSLog(@"<amqp_connection (%p) :: connection closed!>", self);
         return NO;
     }
+    
     return YES;
 }
 

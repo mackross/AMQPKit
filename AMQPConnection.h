@@ -22,21 +22,13 @@
 #import "amqp.h"
 #import "AMQPObject.h"
 
-////////////////////////////////////////////////////////////////////////////////
-// Exceptions
-////////////////////////////////////////////////////////////////////////////////
 extern NSString *const kAMQPConnectionException;
 extern NSString *const kAMQPLoginException;
 extern NSString *const kAMQPOperationException;
 
 @class AMQPChannel;
+
 @interface AMQPConnection : AMQPObject
-{
-	amqp_connection_state_t connection;
-	int socketFD;
-	
-	unsigned int nextChannel;
-}
 
 @property (readonly) amqp_connection_state_t internalConnection;
 

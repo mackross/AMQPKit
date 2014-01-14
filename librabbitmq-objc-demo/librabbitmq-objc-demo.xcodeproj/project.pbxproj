@@ -15,7 +15,7 @@
 		D3CD116E188428CB002E9316 /* CTXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD116D188428CB002E9316 /* CTXAppDelegate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D3CD1170188428CB002E9316 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3CD116F188428CB002E9316 /* Images.xcassets */; };
 		D3CD11A11884396C002E9316 /* AMQPChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD118D1884396C002E9316 /* AMQPChannel.m */; };
-		D3CD11A21884396C002E9316 /* AMQPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD118F1884396C002E9316 /* AMQPConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D3CD11A21884396C002E9316 /* AMQPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD118F1884396C002E9316 /* AMQPConnection.m */; };
 		D3CD11A31884396C002E9316 /* AMQPConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11911884396C002E9316 /* AMQPConsumer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D3CD11A41884396C002E9316 /* AMQPConsumerThread.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11931884396C002E9316 /* AMQPConsumerThread.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D3CD11A51884396C002E9316 /* AMQPExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11961884396C002E9316 /* AMQPExchange.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
