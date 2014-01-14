@@ -12,7 +12,9 @@
 
 @interface AMQPExchange(Additions)
 
-- (void)publishMessage:(NSString *)body messageID:(NSString *)messageID usingRoutingKey:(NSString *)theRoutingKey;
+- (void)publishMessage:(NSString *)body
+             messageID:(NSString *)messageID
+       usingRoutingKey:(NSString *)theRoutingKey;
 
 - (void)publishMessage:(NSString *)messageType
              messageID:(NSString *)messageID

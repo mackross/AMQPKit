@@ -19,58 +19,66 @@
 
 #import "AMQPExchange.h"
 
+# import "AMQPChannel.h"
+
 # import "amqp.h"
 # import "amqp_framing.h"
 
 # import "config.h"
-# import "AMQPChannel.h"
 
 #define AMQP_EXCHANGE_TYPE_DIRECT   @"direct"
 #define AMQP_EXCHANGE_TYPE_FANOUT   @"fanout"
 #define AMQP_EXCHANGE_TYPE_TOPIC    @"topic"
+
+@interface AMQPExchange ()
+
+@property (assign, readwrite) amqp_bytes_t internalExchange;
+@property (strong, readwrite) AMQPChannel *channel;
+
+@end
+
 @implementation AMQPExchange
 
-@synthesize internalExchange = exchange;
-
-- (id)initExchangeOfType:(NSString*)theType withName:(NSString*)theName onChannel:(AMQPChannel*)theChannel  isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
+- (void)dealloc
 {
-	if (self = [super init])
-	{
+	amqp_bytes_free(_internalExchange);
+}
+
+- (id)initExchangeOfType:(NSString *)theType withName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
+{
+    self = [super init];
+	if (self) {
 		amqp_exchange_declare(theChannel.connection.internalConnection, theChannel.internalChannel, amqp_cstring_bytes([theName UTF8String]), amqp_cstring_bytes([theType UTF8String]), passive, durable, AMQP_EMPTY_TABLE);
 		
 		[theChannel.connection checkLastOperation:@"Failed to declare exchange"];
 		
-		exchange = amqp_bytes_malloc_dup(amqp_cstring_bytes([theName UTF8String]));
-		channel = [theChannel retain];
+		_internalExchange = amqp_bytes_malloc_dup(amqp_cstring_bytes([theName UTF8String]));
+		_channel = theChannel;
 	}
 	
 	return self;
 }
-- (id)initDirectExchangeWithName:(NSString*)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
+
+- (id)initDirectExchangeWithName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
 {
 	return [self initExchangeOfType:AMQP_EXCHANGE_TYPE_DIRECT withName:theName onChannel:theChannel isPassive:passive isDurable:durable getsAutoDeleted:autoDelete];
 }
-- (id)initFanoutExchangeWithName:(NSString*)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
+
+- (id)initFanoutExchangeWithName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
 {
 	return [self initExchangeOfType:AMQP_EXCHANGE_TYPE_FANOUT withName:theName onChannel:theChannel isPassive:passive isDurable:durable getsAutoDeleted:autoDelete];
 }
-- (id)initTopicExchangeWithName:(NSString*)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
+
+- (id)initTopicExchangeWithName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
 {
 	return [self initExchangeOfType:AMQP_EXCHANGE_TYPE_TOPIC withName:theName onChannel:theChannel isPassive:passive isDurable:durable getsAutoDeleted:autoDelete];
 }
-- (void)dealloc
-{
-	amqp_bytes_free(exchange);
-	[channel release];
-	
-	[super dealloc];
-}
 
-- (void)publishMessage:(NSString*)body usingRoutingKey:(NSString*)theRoutingKey
+- (void)publishMessage:(NSString *)body usingRoutingKey:(NSString *)theRoutingKey
 {
-	amqp_basic_publish(channel.connection.internalConnection, channel.internalChannel, exchange, amqp_cstring_bytes([theRoutingKey UTF8String]), NO, NO, NULL, amqp_cstring_bytes([body UTF8String]));
+	amqp_basic_publish(_channel.connection.internalConnection, _channel.internalChannel, _internalExchange, amqp_cstring_bytes([theRoutingKey UTF8String]), NO, NO, NULL, amqp_cstring_bytes([body UTF8String]));
 	
-	[channel.connection checkLastOperation:@"Failed to publish message"];
+	[_channel.connection checkLastOperation:@"Failed to publish message"];
 }
 
 @end
