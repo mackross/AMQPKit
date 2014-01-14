@@ -28,20 +28,14 @@
 @class AMQPMessage;
 
 @interface AMQPConsumer : AMQPObject
-{
-	AMQPChannel *channel;
-	AMQPQueue *queue;
-	
-	amqp_bytes_t consumer;
-}
 
 @property (readonly) amqp_bytes_t internalConsumer;
 @property (readonly) AMQPChannel *channel;
 @property (readonly) AMQPQueue *queue;
 
-- (id)initForQueue:(AMQPQueue*)theQueue onChannel:(AMQPChannel*)theChannel useAcknowledgements:(BOOL)ack isExclusive:(BOOL)exclusive receiveLocalMessages:(BOOL)local;
+- (id)initForQueue:(AMQPQueue *)theQueue onChannel:(AMQPChannel *)theChannel useAcknowledgements:(BOOL)ack isExclusive:(BOOL)exclusive receiveLocalMessages:(BOOL)local;
 - (void)dealloc;
 
-- (AMQPMessage*)pop;
+- (AMQPMessage *)pop;
 
 @end
