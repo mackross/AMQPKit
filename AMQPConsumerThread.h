@@ -29,8 +29,8 @@
 
 @interface AMQPConsumerThread : NSThread
 
-@property (nonatomic, assign) id<AMQPConsumerThreadDelegate> delegate;
-@property (nonatomic, readonly, copy) NSString *topic;
+@property (weak) id<AMQPConsumerThreadDelegate> delegate;
+@property (readonly, copy) NSString *topic;
 
 - (id)initWithConfiguration:(NSDictionary *)configuration
                 exchangeKey:(NSString *)exchangeKey

@@ -21,10 +21,10 @@ Pod::Spec.new do |s|
   s.source   = { :git => 'git@github.com:EFEdcuationFirstMobile/librabbitmq-objc.git', :tag => "#{s.version}" }
   s.source_files = '*.{h,m}', 'rabbitmq-lib/*.h'
   s.requires_arc = false
-  s.exclude_files = 'AMQPTTLManager.{h,m}', 'AMQPChannel.{h,m}', 'AMQPConnection.{h,m}', 'AMQPConsumer.{h,m}'
+  s.exclude_files = 'AMQPTTLManager.{h,m}', 'AMQPChannel.{h,m}', 'AMQPConnection.{h,m}', 'AMQPConsumer.{h,m}', 'AMQPConsumerThread.{h,m}'
   
   s.subspec 'AMQPTTLManager' do |amqpttlmanager|
-    amqpttlmanager.source_files = 'AMQPTTLManager.{h,m}', 'AMQPChannel.{h,m}', 'AMQPConnection.{h,m}', 'AMQPConsumer.{h,m}'
+    amqpttlmanager.source_files = 'AMQPTTLManager.{h,m}', 'AMQPChannel.{h,m}', 'AMQPConnection.{h,m}', 'AMQPConsumer.{h,m}', 'AMQPConsumerThread.{h,m}'
     amqpttlmanager.requires_arc = true
   end
   

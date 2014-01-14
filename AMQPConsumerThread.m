@@ -40,42 +40,28 @@ const NSTimeInterval kReconnectionInterval          = 1.0;
 const NSUInteger kMaxReconnectionAttempts           = 3;
 
 @interface AMQPConsumerThread() <AMQPTTLManagerDelegate>
-{
-    AMQPTTLManager   *_ttlManager;
-    BOOL            _checkConnectionTimerFired;
-    NSUInteger      _reconnectionCount;
-    BOOL            _connectionErrorWasRaised;
-}
 
-- (BOOL)_setup:(NSError **)error;
-- (void)_tearDown;
+@property (assign) BOOL checkConnectionTimerFired;
+@property (assign) BOOL connectionErrorWasRaised;
+@property (assign) BOOL started;
+@property (assign) NSUInteger reconnectionCount;
 
-- (BOOL)_connect:(NSError **)error;
-- (BOOL)_setupExchange:(NSError **)error;
-- (BOOL)_setupConsumerQueue:(NSError **)error;
-- (BOOL)_setupConsumer:(NSError **)error;
+@property (strong) NSDictionary *configuration;
+@property (copy) NSString *topic;
+@property (copy) NSString *exchangeKey;
 
-- (AMQPMessage *)_consume;
-- (void)_handleConnectionError;
+@property (strong) AMQPTTLManager *ttlManager;
+@property (strong) AMQPConnection *connection;
+@property (strong) AMQPChannel *channel;
+@property (strong) AMQPExchange *exchange;
+@property (strong) AMQPQueue *queue;
+@property (strong) AMQPConsumer *consumer;
 
 @end
 
 @implementation AMQPConsumerThread
 {
-    NSDictionary        *_configuration;
-    NSString            *_exchangeKey;
-    NSString            *_topic;
-    
-    AMQPConnection      *_connection;
-    AMQPChannel         *_channel;
-    AMQPExchange        *_exchange;
-    AMQPQueue           *_queue;
-    AMQPConsumer        *_consumer;
-    
     dispatch_queue_t    _callbackQueue;
-    dispatch_queue_t    _lockQueue;
-    
-    BOOL                _started;
 }
 
 #pragma mark - Dealloc and Initialization
@@ -84,17 +70,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 {
     [self _tearDown];
     
-    [_configuration release];
-    [_exchangeKey release];
-    [_topic release];
-    _delegate = nil;
-    
 #if RABBITMQ_DISPATCH_RETAIN_RELEASE
     dispatch_release(_callbackQueue);
-    dispatch_release(_lockQueue);
 #endif
-    
-	[super dealloc];
 }
 
 - (id)initWithConfiguration:(NSDictionary *)configuration
@@ -105,20 +83,18 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 {
     self = [super init];
     if (self) {
-        _configuration  = [configuration retain];
-        _exchangeKey    = [exchangeKey copy];
-        _topic          = [topic copy];
+        _configuration  = configuration;
+        _exchangeKey    = exchangeKey;
+        _topic          = topic;
         _delegate       = theDelegate;
         
         _ttlManager = [[AMQPTTLManager alloc] init];
         _ttlManager.delegate = self;
         
         _callbackQueue  = callbackQueue ? callbackQueue : dispatch_get_main_queue();
-        _lockQueue      = dispatch_queue_create("com.librabbitmq-objc.amqp.consumer-thread.lock", NULL);
         
 #if RABBITMQ_DISPATCH_RETAIN_RELEASE
         dispatch_retain(_callbackQueue);
-        dispatch_retain(_lockQueue);
 #endif
     }
     
@@ -129,6 +105,8 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 
 - (void)main
 {
+    // atomicity of _started iVar (as now or as before using a lock queue) does not guarantee critical section fro the entire method.
+    // fix using appropriace lock mechanism and stop method accordingly
     @autoreleasepool {
         NSLog(@"<starting: consumer_thread: (%p) topic: %@>", self, _topic);
         NSError *error = nil;
@@ -143,10 +121,8 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             return;
         }
         
-        dispatch_sync(_lockQueue, ^{
-            _started = YES;
-        });
-
+        self.started = YES;
+        
         if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStart:)]) {
             dispatch_sync(_callbackQueue, ^{
                 [self.delegate amqpConsumerThreadDidStart:self];
@@ -171,10 +147,8 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         [self _tearDown];
         NSLog(@"<stopped: consumer_thread: (%p) topic: %@>", self, _topic);
         
-        dispatch_sync(_lockQueue, ^{
-            _started = NO;
-        });
-
+        self.started = NO;
+        
         if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
             dispatch_async(_callbackQueue, ^{
                 [self.delegate amqpConsumerThreadDidStop:self];
@@ -189,11 +163,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 {
     [self cancel];
     
-    __block BOOL stopped = NO;
-    while(!stopped) {
-        dispatch_sync(_lockQueue, ^{
-            stopped = !_started;
-        });
+    BOOL stopped = NO;
+    while(!stopped) { // this thing is WRONG (adebortoli 14.01.2014)
+        stopped = !self.started;
     }
 }
 
@@ -245,7 +217,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         [_connection loginAsUser:username withPassword:password onVHost:vhost];
         NSLog(@"<consumer_thread (%p) topic: %@ :: authenticated!>", self, _topic);
         
-        _channel = [[_connection openChannel] retain];
+        _channel = [_connection openChannel];
         [_ttlManager addObject:kCheckConnectionToken ttl:kCheckConnectionInterval];
     }
     @catch(NSException *exception) {
@@ -312,7 +284,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 - (BOOL)_setupConsumer:(NSError **)outError
 {
     @try {
-        _consumer = [[_queue startConsumerWithAcknowledgements:NO isExclusive:NO receiveLocalMessages:NO] retain];
+        _consumer = [_queue startConsumerWithAcknowledgements:NO isExclusive:NO receiveLocalMessages:NO];
     }
     @catch (NSException *exception) {
         if (outError != NULL) {
@@ -330,23 +302,19 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 
 - (void)_tearDown
 {
-    ////////////////////////////////////////////////////////////////////////////////
     // NOTE: the order for the following operations is important
     // 1) consumer
     // 2) queue
     // 3) exchange
     // 4) channel
     // 5) connection
-    ////////////////////////////////////////////////////////////////////////////////
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Note: if we don't currently have connectivity, some of these calls can
     // block for quite a bit (a few seconds)
     // (pdcgomes 21.03.2013)
-    ////////////////////////////////////////////////////////////////////////////////
-
+    
     @try {
-        [_consumer release]; _consumer = nil;
+        _consumer = nil;
         @try {
             // if we're not connected, there's no point in attempting to unbind (pdcgomes 21.03.2013)
             if (!_connectionErrorWasRaised) {
@@ -356,9 +324,10 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         @catch (NSException *exception) {
             NSLog(@"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
         }
-        [_exchange release];    _exchange = nil;
-        [_queue release];       _queue = nil;
-        [_channel release];     _channel = nil;
+        
+        _exchange = nil;
+        _queue = nil;
+        _channel = nil;
         
         // if we're not connected, there's no point in attempting to disconnect (pdcgomes 21.03.2013)
         if (!_connectionErrorWasRaised) {
@@ -369,27 +338,10 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         NSLog(@"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
     }
     @finally {
-        [_connection release];
         _connection = nil;
         [_ttlManager removeAllObjects];
-        [_ttlManager release];
         _ttlManager = nil;
     }
-
-//    @try {
-//        [_consumer release], _consumer = nil;
-//        [_queue unbindFromExchange:_exchange withKey:_topic];
-//        [_exchange release], _exchange = nil;
-//        [_queue release], _queue = nil;
-//        [_channel release], _channel = nil;
-//        [_connection release], _connection = nil;
-//    }
-//    @catch (NSException *exception) {
-//        NSLog(@"<consumer_thread (%p) exception triggered during tear down :: exception (%@) reason (%@)>", self, exception.name, exception.reason);
-//    }
-//    @finally {
-//        [_ttlManager removeAllObjects];
-//    }
 }
 
 #pragma mark - Private Methods - Message consuming loop
@@ -461,8 +413,6 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////
         if ([self isCancelled]) {
             break;
         }
@@ -472,9 +422,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 		// Frame #2: header frame containing body size
 		// Frame #3+: body frames
 
-		////////////////////////////////////////////////////////////////////////////////
         // Frame #1: method frame with method basic.deliver
-        ////////////////////////////////////////////////////////////////////////////////
 		result = amqp_simple_wait_frame(connection, &frame);
 		if (result < 0) {
             NSLog(@"<consumer_thread (%p) topic %@ :: frame #1 error (%d)>", self, _topic, result);
@@ -487,11 +435,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             continue;
         }
 		
-		delivery = (amqp_basic_deliver_t*)frame.payload.method.decoded;
+		delivery = (amqp_basic_deliver_t *)frame.payload.method.decoded;
 		
-        ////////////////////////////////////////////////////////////////////////////////
         // Frame #2: header frame containing body size
-        ////////////////////////////////////////////////////////////////////////////////
 		result = amqp_simple_wait_frame(connection, &frame);
 		if (result < 0) {
             NSLog(@"<consumer_thread (%p) topic %@ :: frame #2 error (%d)>", self, _topic, result);
@@ -505,13 +451,11 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 		
 		properties = (amqp_basic_properties_t *)frame.payload.properties.decoded;
 		
-		bodySize = frame.payload.properties.body_size;
+		bodySize = (size_t)frame.payload.properties.body_size;
 		receivedBytes = 0;
 		body = amqp_bytes_malloc(bodySize);
 		
-        ////////////////////////////////////////////////////////////////////////////////
         // Frame #3+: body frames
-        ////////////////////////////////////////////////////////////////////////////////
 		while(receivedBytes < bodySize) {
 			result = amqp_simple_wait_frame(connection, &frame);
 			if (result < 0) {
@@ -534,11 +478,9 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 	
 	return message;
     
-    ////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////
     HandleFrameError:
     [self _handleConnectionError];
-//    [self cancel];
+
     return nil;
 }
 

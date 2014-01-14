@@ -21,6 +21,7 @@
 
 @class AMQPConsumerThread;
 @class AMQPMessage;
+
 @protocol AMQPConsumerThreadDelegate <NSObject>
 
 @required
