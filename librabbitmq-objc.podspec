@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'librabbitmq-objc'
-  s.version  = '0.1.0ctx'
+  s.version  = '0.3.0ctx-ARC'
   s.summary  = 'Objective-C wrapper for librabbitmq-c'
   s.homepage     = "http://ef.com"
   
@@ -20,12 +20,6 @@ Pod::Spec.new do |s|
   s.preserve_paths = 'rabbitmq-lib/librabbitmq.a'
   s.source   = { :git => 'git@github.com:EFEdcuationFirstMobile/librabbitmq-objc.git', :tag => "#{s.version}" }
   s.source_files = '*.{h,m}', 'rabbitmq-lib/*.h'
-  s.requires_arc = false
-  s.exclude_files = 'AMQPTTLManager.{h,m}', 'AMQPChannel.{h,m}', 'AMQPConnection.{h,m}', 'AMQPConsumer.{h,m}', 'AMQPConsumerThread.{h,m}'
-  
-  s.subspec 'AMQPTTLManager' do |amqpttlmanager|
-    amqpttlmanager.source_files = 'AMQPTTLManager.{h,m}', 'AMQPChannel.{h,m}', 'AMQPConnection.{h,m}', 'AMQPConsumer.{h,m}', 'AMQPConsumerThread.{h,m}'
-    amqpttlmanager.requires_arc = true
-  end
+  s.requires_arc = true
   
 end
