@@ -28,17 +28,14 @@
 @class AMQPConsumer;
 
 @interface AMQPQueue : AMQPObject
-{
-	amqp_bytes_t queueName;
-	AMQPChannel *channel;
-}
 
 @property (readonly) amqp_bytes_t internalQueue;
+@property (readonly) AMQPChannel *channel;
 
-- (id)initWithName:(NSString*)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isExclusive:(BOOL)exclusive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;
+- (id)initWithName:(NSString *)theName onChannel:(AMQPChannel *)theChannel isPassive:(BOOL)passive isExclusive:(BOOL)exclusive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;
 
-- (void)bindToExchange:(AMQPExchange*)theExchange withKey:(NSString*)bindingKey;
-- (void)unbindFromExchange:(AMQPExchange*)theExchange withKey:(NSString*)bindingKey;
+- (void)bindToExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey;
+- (void)unbindFromExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey;
 
 - (void)deleteQueue;
 

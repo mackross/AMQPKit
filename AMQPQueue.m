@@ -29,18 +29,29 @@
 uint16_t amqp_queue_ttl = 60000;
 uint16_t amqp_queue_msg_ttl = 60000;
 
+@interface AMQPQueue ()
+
+@property (assign, readwrite) amqp_bytes_t internalQueue;
+@property (strong, readwrite) AMQPChannel *channel;
+
+@end
+
 @implementation AMQPQueue
 
-@synthesize internalQueue = queueName;
+- (void)dealloc
+{
+	amqp_bytes_free(_internalQueue);
+}
 
-- (id)initWithName:(NSString*)theName
-         onChannel:(AMQPChannel*)theChannel
+- (id)initWithName:(NSString *)theName
+         onChannel:(AMQPChannel *)theChannel
          isPassive:(BOOL)passive
        isExclusive:(BOOL)exclusive
          isDurable:(BOOL)durable
    getsAutoDeleted:(BOOL)autoDelete
 {
-	if (self = [super init]) {
+    self = [super init];
+	if (self) {
         amqp_table_t queue_args;
         amqp_table_entry_t entries[2];
         
@@ -66,67 +77,56 @@ uint16_t amqp_queue_msg_ttl = 60000;
 		
 		[theChannel.connection checkLastOperation:@"Failed to declare queue"];
 		
-		queueName = amqp_bytes_malloc_dup(declaration->queue);
-		channel = [theChannel retain];
+		_internalQueue = amqp_bytes_malloc_dup(declaration->queue);
+		_channel = theChannel;
 	}
 	
 	return self;
 }
-- (void)dealloc
-{
-	amqp_bytes_free(queueName);
-	[channel release];
-	
-	[super dealloc];
-}
 
-- (void)bindToExchange:(AMQPExchange*)theExchange withKey:(NSString*)bindingKey
+- (void)bindToExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey
 {
-	amqp_queue_bind(channel.connection.internalConnection,
-                    channel.internalChannel,
-                    queueName,
+	amqp_queue_bind(self.channel.connection.internalConnection,
+                    self.channel.internalChannel,
+                    self.internalQueue,
                     theExchange.internalExchange,
                     amqp_cstring_bytes([bindingKey UTF8String]),
                     AMQP_EMPTY_TABLE);
 	
-	[channel.connection checkLastOperation:@"Failed to bind queue to exchange"];
-}
-- (void)unbindFromExchange:(AMQPExchange*)theExchange withKey:(NSString*)bindingKey
-{
-//    if ([channel.connection checkConnection]) {
-        amqp_queue_unbind(channel.connection.internalConnection,
-                          channel.internalChannel,
-                          queueName,
-                          theExchange.internalExchange,
-                          amqp_cstring_bytes([bindingKey UTF8String]),
-                          AMQP_EMPTY_TABLE);
-//    }
-//    else {
-//        NSLog(@"<amqp_queue: error: unable to unbind queue from exchange due to disconnection>");
-//        [NSException raise:kAMQPOperationException format:@"%@: %@", @"AMQPQueue", @"Unable to unbind queue from exchange. Connection lost."];
-//    }
-	
-	[channel.connection checkLastOperation:@"Failed to unbind queue from exchange"];
+	[self.channel.connection checkLastOperation:@"Failed to bind queue to exchange"];
 }
 
-- (AMQPConsumer*)startConsumerWithAcknowledgements:(BOOL)ack isExclusive:(BOOL)exclusive receiveLocalMessages:(BOOL)local
+- (void)unbindFromExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey
+{
+    amqp_queue_unbind(self.channel.connection.internalConnection,
+                      self.channel.internalChannel,
+                      self.internalQueue,
+                      theExchange.internalExchange,
+                      amqp_cstring_bytes([bindingKey UTF8String]),
+                      AMQP_EMPTY_TABLE);
+	
+	[self.channel.connection checkLastOperation:@"Failed to unbind queue from exchange"];
+}
+
+- (AMQPConsumer *)startConsumerWithAcknowledgements:(BOOL)ack isExclusive:(BOOL)exclusive receiveLocalMessages:(BOOL)local
 {
 	AMQPConsumer *consumer = [[AMQPConsumer alloc] initForQueue:self
-                                                      onChannel:channel
+                                                      onChannel:self.channel
                                             useAcknowledgements:ack
                                                     isExclusive:exclusive
                                            receiveLocalMessages:local];
 	
-	return [consumer autorelease];
+	return consumer;
 }
 
 - (void)deleteQueue
 {
-    amqp_queue_delete(channel.connection.internalConnection,
-                      channel.internalChannel,
-                      queueName, TRUE,
+    amqp_queue_delete(self.channel.connection.internalConnection,
+                      self.channel.internalChannel,
+                      self.internalQueue, TRUE,
                       TRUE);
-    [channel.connection checkLastOperation:@"Failed to delete queue"];
+    
+    [self.channel.connection checkLastOperation:@"Failed to delete queue"];
 }
 
 @end
