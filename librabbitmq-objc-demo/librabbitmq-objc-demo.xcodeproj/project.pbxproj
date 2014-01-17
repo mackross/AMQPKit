@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D39911BF1889824400A84CC5 /* librabbitmq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D39911AA1889823800A84CC5 /* librabbitmq.a */; };
 		D3CD115E188428CB002E9316 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD115D188428CB002E9316 /* Foundation.framework */; };
 		D3CD1160188428CB002E9316 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD115F188428CB002E9316 /* CoreGraphics.framework */; };
 		D3CD1162188428CB002E9316 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD1161188428CB002E9316 /* UIKit.framework */; };
@@ -24,11 +25,18 @@
 		D3CD11A81884396C002E9316 /* AMQPObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD119C1884396C002E9316 /* AMQPObject.m */; };
 		D3CD11A91884396C002E9316 /* AMQPQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD119E1884396C002E9316 /* AMQPQueue.m */; };
 		D3CD11AA1884396C002E9316 /* AMQPTTLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11A01884396C002E9316 /* AMQPTTLManager.m */; };
-		D3CD11B4188439A8002E9316 /* librabbitmq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD11B2188439A8002E9316 /* librabbitmq.a */; };
 		D3CD11C518843A32002E9316 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD11C418843A32002E9316 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D39911AA1889823800A84CC5 /* librabbitmq.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librabbitmq.a; sourceTree = "<group>"; };
+		D39911C0188982A000A84CC5 /* amqp_framing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_framing.h; sourceTree = "<group>"; };
+		D39911C1188982A000A84CC5 /* amqp_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_private.h; sourceTree = "<group>"; };
+		D39911C2188982A000A84CC5 /* amqp_socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_socket.h; sourceTree = "<group>"; };
+		D39911C3188982A000A84CC5 /* amqp_ssl_socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_ssl_socket.h; sourceTree = "<group>"; };
+		D39911C4188982A000A84CC5 /* amqp_tcp_socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_tcp_socket.h; sourceTree = "<group>"; };
+		D39911C5188982A000A84CC5 /* amqp_timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_timer.h; sourceTree = "<group>"; };
+		D39911C6188982A000A84CC5 /* amqp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp.h; sourceTree = "<group>"; };
 		D3CD115A188428CB002E9316 /* librabbitmq-objc-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "librabbitmq-objc-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3CD115D188428CB002E9316 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D3CD115F188428CB002E9316 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -66,12 +74,6 @@
 		D3CD119F1884396C002E9316 /* AMQPTTLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPTTLManager.h; path = ../../AMQPTTLManager.h; sourceTree = "<group>"; };
 		D3CD11A01884396C002E9316 /* AMQPTTLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPTTLManager.m; path = ../../AMQPTTLManager.m; sourceTree = "<group>"; };
 		D3CD11AC1884398D002E9316 /* AMQPWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPWrapper.h; path = ../../AMQPWrapper.h; sourceTree = "<group>"; };
-		D3CD11AE188439A8002E9316 /* amqp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp.h; sourceTree = "<group>"; };
-		D3CD11AF188439A8002E9316 /* amqp_framing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_framing.h; sourceTree = "<group>"; };
-		D3CD11B0188439A8002E9316 /* amqp_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_private.h; sourceTree = "<group>"; };
-		D3CD11B1188439A8002E9316 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		D3CD11B2188439A8002E9316 /* librabbitmq.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librabbitmq.a; sourceTree = "<group>"; };
-		D3CD11B3188439A8002E9316 /* socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = socket.h; sourceTree = "<group>"; };
 		D3CD11C418843A32002E9316 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D3CD11C718843B83002E9316 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D3CD11CC18843D3B002E9316 /* librabbitmq-objc.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "librabbitmq-objc.podspec"; path = "../librabbitmq-objc.podspec"; sourceTree = "<group>"; };
@@ -86,20 +88,36 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3CD11C518843A32002E9316 /* SystemConfiguration.framework in Frameworks */,
-				D3CD11B4188439A8002E9316 /* librabbitmq.a in Frameworks */,
 				D3CD1160188428CB002E9316 /* CoreGraphics.framework in Frameworks */,
 				D3CD1162188428CB002E9316 /* UIKit.framework in Frameworks */,
 				D3CD115E188428CB002E9316 /* Foundation.framework in Frameworks */,
+				D39911BF1889824400A84CC5 /* librabbitmq.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D39911911889823800A84CC5 /* rabbitmq-c */ = {
+			isa = PBXGroup;
+			children = (
+				D39911C0188982A000A84CC5 /* amqp_framing.h */,
+				D39911C1188982A000A84CC5 /* amqp_private.h */,
+				D39911C2188982A000A84CC5 /* amqp_socket.h */,
+				D39911C3188982A000A84CC5 /* amqp_ssl_socket.h */,
+				D39911C4188982A000A84CC5 /* amqp_tcp_socket.h */,
+				D39911C5188982A000A84CC5 /* amqp_timer.h */,
+				D39911C6188982A000A84CC5 /* amqp.h */,
+				D39911AA1889823800A84CC5 /* librabbitmq.a */,
+			);
+			name = "rabbitmq-c";
+			path = "../rabbitmq-c";
+			sourceTree = "<group>";
+		};
 		D3CD1151188428CB002E9316 = {
 			isa = PBXGroup;
 			children = (
-				D3CD11AD188439A8002E9316 /* rabbitmq-lib */,
+				D39911911889823800A84CC5 /* rabbitmq-c */,
 				D3CD11AB18843971002E9316 /* librabbitmq-objc */,
 				D3CD11CC18843D3B002E9316 /* librabbitmq-objc.podspec */,
 				D3CD11CD18843D3B002E9316 /* LICENSE.md */,
@@ -201,20 +219,6 @@
 			);
 			name = "librabbitmq-objc";
 			path = "librabbitmq-objc-demo";
-			sourceTree = "<group>";
-		};
-		D3CD11AD188439A8002E9316 /* rabbitmq-lib */ = {
-			isa = PBXGroup;
-			children = (
-				D3CD11AE188439A8002E9316 /* amqp.h */,
-				D3CD11AF188439A8002E9316 /* amqp_framing.h */,
-				D3CD11B0188439A8002E9316 /* amqp_private.h */,
-				D3CD11B1188439A8002E9316 /* config.h */,
-				D3CD11B2188439A8002E9316 /* librabbitmq.a */,
-				D3CD11B3188439A8002E9316 /* socket.h */,
-			);
-			name = "rabbitmq-lib";
-			path = "../rabbitmq-lib";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -351,8 +355,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../rabbitmq-c",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../rabbitmq-c",
+				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -384,7 +398,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../rabbitmq-c",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../rabbitmq-c",
+				);
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -398,16 +422,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "librabbitmq-objc-demo/librabbitmq-objc-demo-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../rabbitmq-lib",
-				);
 				INFOPLIST_FILE = "librabbitmq-objc-demo/librabbitmq-objc-demo-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../rabbitmq-lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -421,16 +437,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "librabbitmq-objc-demo/librabbitmq-objc-demo-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../rabbitmq-lib",
-				);
 				INFOPLIST_FILE = "librabbitmq-objc-demo/librabbitmq-objc-demo-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../rabbitmq-lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

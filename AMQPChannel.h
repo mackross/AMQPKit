@@ -19,10 +19,9 @@
 
 #import <Foundation/Foundation.h>
 
-# import "amqp.h"
+#import "AMQPObject.h"
 
-# import "AMQPConnection.h"
-# import "AMQPObject.h"
+@class AMQPConnection;
 
 @interface AMQPChannel : AMQPObject
 

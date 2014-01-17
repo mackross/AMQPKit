@@ -22,8 +22,6 @@
 #import "AMQPWrapper.h"
 #import "AMQPExchange+Additions.h"
 
-#import "amqp.h"
-#import "amqp_framing.h"
 #import <string.h>
 #import <stdlib.h>
 

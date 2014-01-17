@@ -19,12 +19,10 @@
 
 #import "AMQPExchange.h"
 
-# import "AMQPChannel.h"
+#import "AMQPChannel.h"
+#import "AMQPConnection.h"
 
-# import "amqp.h"
-# import "amqp_framing.h"
-
-# import "config.h"
+//#import "config.h"
 
 #define AMQP_EXCHANGE_TYPE_DIRECT   @"direct"
 #define AMQP_EXCHANGE_TYPE_FANOUT   @"fanout"

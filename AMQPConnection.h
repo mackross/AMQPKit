@@ -19,7 +19,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "amqp.h"
 #import "AMQPObject.h"
 
 extern NSString *const kAMQPConnectionException;

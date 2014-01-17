@@ -19,9 +19,6 @@
 
 #import "AMQPMessage.h"
 
-# import "amqp.h"
-# import "amqp_framing.h"
-
 # define AMQP_BYTES_TO_NSSTRING(x) [[NSString alloc] initWithBytes:x.bytes length:x.len encoding:NSUTF8StringEncoding]
 
 @implementation AMQPMessage

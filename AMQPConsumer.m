@@ -19,14 +19,13 @@
 
 #import "AMQPConsumer.h"
 
-# import "amqp.h"
-# import "amqp_framing.h"
-# import <string.h>
-# import <stdlib.h>
+//#import <string.h>
+//#import <stdlib.h>
 
-# import "AMQPChannel.h"
-# import "AMQPQueue.h"
-# import "AMQPMessage.h"
+#import "AMQPChannel.h"
+#import "AMQPQueue.h"
+#import "AMQPMessage.h"
+#import "AMQPConnection.h"
 
 #define ERROR_NO_MEMORY 1
 #define ERROR_BAD_AMQP_DATA 2

@@ -7,11 +7,10 @@
 //
 
 #import "AMQPExchange+Additions.h"
+
 #import "AMQPChannel.h"
 #import "AMQPQueue.h"
-
-#import "amqp.h"
-#import "amqp_framing.h"
+#import "AMQPConnection.h"
 
 @implementation AMQPExchange(Additions)
 

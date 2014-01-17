@@ -19,11 +19,7 @@
 
 #import "AMQPObject.h"
 
-# import <stdio.h>
-# import "amqp.h"
-# import "amqp_framing.h"
-
-# define AMQP_BYTES_TO_NSSTRING(x)
+#import <stdio.h>
 
 @implementation AMQPObject
 
