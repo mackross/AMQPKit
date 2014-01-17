@@ -79,7 +79,6 @@
 		D3CD11CC18843D3B002E9316 /* librabbitmq-objc.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "librabbitmq-objc.podspec"; path = "../librabbitmq-objc.podspec"; sourceTree = "<group>"; };
 		D3CD11CD18843D3B002E9316 /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.md; path = ../LICENSE.md; sourceTree = "<group>"; };
 		D3CD11CE18843D3B002E9316 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		D3F3D700188540430061CB14 /* AMQPCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AMQPCommon.h; path = ../../AMQPCommon.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,7 +192,6 @@
 		D3CD11AB18843971002E9316 /* librabbitmq-objc */ = {
 			isa = PBXGroup;
 			children = (
-				D3F3D700188540430061CB14 /* AMQPCommon.h */,
 				D3CD11AC1884398D002E9316 /* AMQPWrapper.h */,
 				D3CD118C1884396C002E9316 /* AMQPChannel.h */,
 				D3CD118D1884396C002E9316 /* AMQPChannel.m */,

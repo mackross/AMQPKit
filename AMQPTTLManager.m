@@ -26,7 +26,7 @@
 {
     [self _performCleanup];
     
-#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+#if !OS_OBJECT_USE_OBJC
     dispatch_release(_lockQueue);
 #endif
 }
@@ -48,7 +48,7 @@
         
         _lockQueue  = dispatch_queue_create("com.librabbitmq-objc.ttlmanager.lock", NULL);
         
-#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+#if !OS_OBJECT_USE_OBJC
         dispatch_retain(_lockQueue);
 #endif
     }

@@ -30,7 +30,6 @@
 #import "AMQPQueue.h"
 #import "AMQPMessage.h"
 #import "AMQPTTLManager.h"
-#import "AMQPCommon.h"
 
 NSString *const kCheckConnectionToken               = @"com.librabbitmq-objc.amqp.monitor-connection";
 const NSTimeInterval kCheckConnectionInterval       = 30.0;
@@ -68,7 +67,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 {
     [self _tearDown];
     
-#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+#if !OS_OBJECT_USE_OBJC
     dispatch_release(_callbackQueue);
 #endif
 }
@@ -90,7 +89,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         
         _callbackQueue  = callbackQueue ? callbackQueue : dispatch_get_main_queue();
         
-#if RABBITMQ_DISPATCH_RETAIN_RELEASE
+#if !OS_OBJECT_USE_OBJC
         dispatch_retain(_callbackQueue);
 #endif
     }
