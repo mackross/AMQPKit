@@ -24,7 +24,11 @@
 
 - (void)dealloc
 {
-    [self _performCleanup];
+    [_timers enumerateObjectsUsingBlock:^(NSTimer *timer, NSUInteger idx, BOOL *stop) {
+        [timer invalidate];
+    }];
+    [_timers removeAllObjects];
+    [_objects removeAllObjects];
     
 #if !OS_OBJECT_USE_OBJC
     dispatch_release(_lockQueue);
@@ -136,19 +140,8 @@
     
     NSTimer *timer = [_timers objectAtIndex:indexOfObject];
     [timer invalidate];
-    [_timers removeObject:timer];
-    [_objects removeObjectAtIndex:indexOfObject];
-}
-
-- (void)_performCleanup
-{
-    dispatch_sync(_lockQueue, ^{
-        [_timers enumerateObjectsUsingBlock:^(NSTimer *timer, NSUInteger idx, BOOL *stop) {
-            [timer invalidate];
-        }];
-        [_timers removeAllObjects];
-        [_objects removeAllObjects];
-    });
+    [self.timers removeObject:timer];
+    [self.objects removeObjectAtIndex:indexOfObject];
 }
 
 @end
