@@ -19,8 +19,8 @@
 
 #import <unistd.h>
 #import <netinet/tcp.h>
-//#import <socket.h>
-//#import <sys/poll.h>
+
+#import <sys/socket.h>
 
 #import "AMQPConnection.h"
 #import "AMQPChannel.h"
@@ -112,20 +112,20 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 	return channel;
 }
 
-//- (BOOL)checkConnection
-//{
-//    NSLog(@"<amqp_connection (%p) :: checking connection...>", self);
-//    
-//    int result = -1;
-//    
-//    char buffer[128];
-//    result = recv(_socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
-//    if (result >= 0) {
-//        NSLog(@"<amqp_connection (%p) :: connection closed!>", self);
-//        return NO;
-//    }
-//    
-//    return YES;
-//}
+- (BOOL)checkConnection
+{
+    NSLog(@"<amqp_connection (%p) :: checking connection...>", self);
+    
+    int result = -1;
+    
+    char buffer[128];
+    result = recv(_socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
+    if (result >= 0) {
+        NSLog(@"<amqp_connection (%p) :: connection closed!>", self);
+        return NO;
+    }
+    
+    return YES;
+}
 
 @end
