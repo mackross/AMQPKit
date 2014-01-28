@@ -132,9 +132,11 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                 AMQPMessage *message = [self _consume];
                 if (message) {
                     NSLog(@"<consumer_thread: (%p) topic: %@ received message>", self, _topic);
-                    dispatch_async(_callbackQueue, ^{
-                        [self.delegate amqpConsumerThread:self didReceiveMessage:message];
-                    });
+                    if ([self.delegate respondsToSelector:@selector(amqpConsumerThread:didReceiveMessage:)]) {
+                        dispatch_async(_callbackQueue, ^{
+                            [self.delegate amqpConsumerThread:self didReceiveMessage:message];
+                        });
+                    }
                 }
             }
         }
@@ -496,7 +498,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     _connectionErrorWasRaised = YES;
     
     dispatch_async(_callbackQueue, ^{
-        if ([self.delegate respondsToSelector:@selector(amqpConsumerThread:reportedError:)]) {
+        if ([self.delegate respondsToSelector:@selector(amqpConsumerThread:didReportError:)]) {
             NSString *errorDescription = nil;
             NSString *failureReason = nil;
             if (!isConnected) {
@@ -513,7 +515,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             NSError *error = [NSError errorWithDomain:@"com.librabbitmq-objc.amqp"
                                                  code:-10
                                              userInfo:userInfo];
-            [self.delegate amqpConsumerThread:self reportedError:error];
+            [self.delegate amqpConsumerThread:self didReportError:error];
         }
     });
 }
