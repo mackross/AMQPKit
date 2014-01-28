@@ -114,14 +114,11 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (BOOL)checkConnection
 {
-    NSLog(@"<amqp_connection (%p) :: checking connection...>", self);
-    
     int result = -1;
     
     char buffer[128];
     result = recv(_socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
     if (result >= 0) {
-        NSLog(@"<amqp_connection (%p) :: connection closed!>", self);
         return NO;
     }
     

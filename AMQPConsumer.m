@@ -86,7 +86,6 @@
 		// Frame #1: method frame with method basic.deliver
 		result = amqp_simple_wait_frame(_channel.connection.internalConnection, &frame);
 		if (result < 0) {
-            NSLog(@"result = %d", result);
             return nil;
         }
 		
@@ -99,12 +98,10 @@
 		// Frame #2: header frame containing body size
 		result = amqp_simple_wait_frame(_channel.connection.internalConnection, &frame);
 		if (result < 0) {
-            NSLog(@"result = %d", result);
             return nil;
         }
 		
 		if (frame.frame_type != AMQP_FRAME_HEADER) {
-            NSLog(@"frame.frame_type != AMQP_FRAME_HEADER");
 			return nil;
 		}
 		
@@ -118,14 +115,10 @@
 		while(receivedBytes < bodySize) {
 			result = amqp_simple_wait_frame(_channel.connection.internalConnection, &frame);
 			if (result < 0) {
-                NSLog(@"result = %d", result);
                 return nil;
             }
 			
-			if (frame.frame_type != AMQP_FRAME_BODY)
-			{
-                NSLog(@"frame.frame_type != AMQP_FRAME_BODY");
-
+			if (frame.frame_type != AMQP_FRAME_BODY) {
 				return nil;
 			}
 			
