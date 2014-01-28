@@ -25,13 +25,12 @@
 @protocol AMQPConsumerThreadDelegate <NSObject>
 
 @required
-- (void)amqpConsumerThread:(AMQPConsumerThread *)thread didReceiveNewMessage:(AMQPMessage *)message;
+- (void)amqpConsumerThread:(AMQPConsumerThread *)thread didReceiveMessage:(AMQPMessage *)message;
 - (void)amqpConsumerThread:(AMQPConsumerThread *)thread didFailWithError:(NSError *)error;
-- (void)amqpConsumerThread:(AMQPConsumerThread *)thread reportedError:(NSError *)error;
+- (void)amqpConsumerThread:(AMQPConsumerThread *)thread didReportError:(NSError *)error;
 
 @optional
 - (void)amqpConsumerThreadDidStart:(AMQPConsumerThread *)thread;
 - (void)amqpConsumerThreadDidStop:(AMQPConsumerThread *)thread;
-- (void)amqpConsumerThread:(AMQPConsumerThread *)thread didReceiveMessage:(AMQPMessage *)message;
 
 @end
