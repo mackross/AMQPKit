@@ -64,36 +64,32 @@
 
 - (void)addObject:(id)object ttl:(NSTimeInterval)ttl
 {
-    __weak typeof(self) weakSelf = self;
-    
     dispatch_sync(_lockQueue, ^{
-        if ([weakSelf.objects indexOfObject:object] != NSNotFound) {
+        if ([_objects indexOfObject:object] != NSNotFound) {
             return;
         }
         
-        [weakSelf.objects addObject:object];
+        [_objects addObject:object];
         
-        NSTimer *timer = [NSTimer timerWithTimeInterval:ttl target:weakSelf selector:@selector(onTick:) userInfo:nil repeats:NO];
+        NSTimer *timer = [NSTimer timerWithTimeInterval:ttl target:self selector:@selector(onTick:) userInfo:nil repeats:NO];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
-        [weakSelf.timers addObject:timer];
+        [_timers addObject:timer];
     });
 }
 
 - (void)onTick:(NSTimer *)timer
 {
-    __weak typeof(self) weakSelf = self;
-    
     dispatch_sync(_lockQueue, ^{
-        NSUInteger indexOfTimer = [weakSelf.timers indexOfObject:timer];
+        NSUInteger indexOfTimer = [_timers indexOfObject:timer];
         if (indexOfTimer == NSNotFound) {
             return;
         }
         
-        id object = [weakSelf.objects objectAtIndex:indexOfTimer];
+        id object = [_objects objectAtIndex:indexOfTimer];
         
-        [weakSelf _cancelTimerForObject:object];
+        [self _cancelTimerForObject:object];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.delegate ttlForObjectExpired:object];
+            [self.delegate ttlForObjectExpired:object];
         });
     });
 }
@@ -101,18 +97,15 @@
 - (BOOL)updateObject:(id)object ttl:(NSTimeInterval)ttl
 {
     __block BOOL updated = NO;
-    
-    __weak typeof(self) weakSelf = self;
-    
     dispatch_sync(_lockQueue, ^{
-        NSUInteger indexOfObject = [weakSelf.objects indexOfObject:object];
+        NSUInteger indexOfObject = [_objects indexOfObject:object];
         if (indexOfObject != NSNotFound) {
-            NSTimer *timerToUpdate = [weakSelf.timers objectAtIndex:indexOfObject];
+            NSTimer *timerToUpdate = [_timers objectAtIndex:indexOfObject];
             [timerToUpdate invalidate];
 
-            NSTimer *replacementTimer = [NSTimer timerWithTimeInterval:ttl target:weakSelf selector:@selector(onTick:) userInfo:nil repeats:NO];
+            NSTimer *replacementTimer = [NSTimer timerWithTimeInterval:ttl target:self selector:@selector(onTick:) userInfo:nil repeats:NO];
             [[NSRunLoop mainRunLoop] addTimer:replacementTimer forMode:NSRunLoopCommonModes];
-            [weakSelf.timers replaceObjectAtIndex:indexOfObject withObject:replacementTimer];
+            [_timers replaceObjectAtIndex:indexOfObject withObject:replacementTimer];
 
             updated = YES;
         }
@@ -122,19 +115,16 @@
 
 - (void)removeObject:(id)object
 {
-    __weak typeof(self) weakSelf = self;
-    
     dispatch_sync(_lockQueue, ^{
-        [weakSelf _cancelTimerForObject:object];
+        [self _cancelTimerForObject:object];
     });
 }
 
 - (void)removeAllObjects
 {
-    __weak typeof(self) weakSelf = self;
-    
     dispatch_sync(_lockQueue, ^{
-        NSArray *objectsToRemove = [NSArray arrayWithArray:weakSelf.objects];
+        NSArray *objectsToRemove = [NSArray arrayWithArray:_objects];
+        __weak typeof(self) weakSelf = self;
         [objectsToRemove enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
             [weakSelf _cancelTimerForObject:object];
         }];

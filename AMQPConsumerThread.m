@@ -106,13 +106,12 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
     @autoreleasepool {
         NSLog(@"<starting: consumer_thread: (%p) topic: %@>", self, _topic);
         NSError *error = nil;
-        __weak typeof(self) weakSelf = self;
         if (![self _setup:&error]) {
             NSLog(@"<starting: consumer_thread: (%p) topic: %@ :: failed to start>", self, _topic);
             NSLog(@"<starting: consumer_thread: (%p) topic: %@ :: error %@>", self, _topic, error);
             if ([self.delegate respondsToSelector:@selector(amqpConsumerThread:didFailWithError:)]) {
                 dispatch_sync(_callbackQueue, ^{
-                    [weakSelf.delegate amqpConsumerThread:weakSelf didFailWithError:error];
+                    [self.delegate amqpConsumerThread:self didFailWithError:error];
                 });
             }
             return;
@@ -122,7 +121,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         
         if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStart:)]) {
             dispatch_sync(_callbackQueue, ^{
-                [weakSelf.delegate amqpConsumerThreadDidStart:weakSelf];
+                [self.delegate amqpConsumerThreadDidStart:self];
             });
         }
 
@@ -134,7 +133,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
                 if (message) {
                     NSLog(@"<consumer_thread: (%p) topic: %@ received message>", self, _topic);
                     dispatch_async(_callbackQueue, ^{
-                        [weakSelf.delegate amqpConsumerThread:weakSelf didReceiveNewMessage:message];
+                        [self.delegate amqpConsumerThread:self didReceiveNewMessage:message];
                     });
                 }
             }
@@ -148,7 +147,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
         
         if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
             dispatch_async(_callbackQueue, ^{
-                [weakSelf.delegate amqpConsumerThreadDidStop:weakSelf];
+                [self.delegate amqpConsumerThreadDidStop:self];
             });
         }
     }
@@ -496,10 +495,8 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 
     _connectionErrorWasRaised = YES;
     
-    __weak typeof(self) weakSelf = self;
-    
     dispatch_async(_callbackQueue, ^{
-        if ([weakSelf.delegate respondsToSelector:@selector(amqpConsumerThread:reportedError:)]) {
+        if ([self.delegate respondsToSelector:@selector(amqpConsumerThread:reportedError:)]) {
             NSString *errorDescription = nil;
             NSString *failureReason = nil;
             if (!isConnected) {
@@ -516,7 +513,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
             NSError *error = [NSError errorWithDomain:@"com.librabbitmq-objc.amqp"
                                                  code:-10
                                              userInfo:userInfo];
-            [weakSelf.delegate amqpConsumerThread:weakSelf reportedError:error];
+            [self.delegate amqpConsumerThread:self reportedError:error];
         }
     });
 }
