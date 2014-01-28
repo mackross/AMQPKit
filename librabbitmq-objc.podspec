@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'librabbitmq-objc'
-  s.version  = '0.4.0ctx-ARC-leaked'
+  s.version  = '0.4.2ctx-ARC'
   s.summary  = 'Objective-C wrapper for librabbitmq-c'
   s.homepage     = "http://ef.com"
   
