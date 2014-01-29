@@ -484,7 +484,7 @@ const NSUInteger kMaxReconnectionAttempts           = 3;
 
 - (void)_handleConnectionError
 {
-    BOOL isConnected = [_connection checkConnection];
+    BOOL isConnected = [_connection check];
 
     if (!isConnected) {
         if ([self _attemptToReconnect]) {

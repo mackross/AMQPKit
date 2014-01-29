@@ -122,7 +122,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     if (peerClosedConnection) {
         return NO;
     }
-    BOOL errorOccured = (result == -1);
+    BOOL errorOccurred = (result == -1);
     BOOL noDataToReadTimeout = (errno == EAGAIN);
     if (errorOccured) {
         if (noDataToReadTimeout) {
