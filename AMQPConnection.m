@@ -124,7 +124,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     }
     BOOL errorOccurred = (result == -1);
     BOOL noDataToReadTimeout = (errno == EAGAIN);
-    if (errorOccured) {
+    if (errorOccurred) {
         if (noDataToReadTimeout) {
             return YES;
         } else {
