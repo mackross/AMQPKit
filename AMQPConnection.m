@@ -112,16 +112,25 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 	return channel;
 }
 
-- (BOOL)checkConnection
+- (BOOL)check
 {
-    int result = -1;
+    // https://developer.apple.com/library/ios/documentation/System/Conceptual/ManPages_iPhoneOS/man2/recv.2.html
     
     char buffer[128];
-    result = recv(_socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
-    if (result >= 0) {
+    int result = recv(_socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
+    BOOL peerClosedConnection = (result == 0);
+    if (peerClosedConnection) {
         return NO;
     }
-    
+    BOOL errorOccured = (result == -1);
+    BOOL noDataToReadTimeout = (errno == EAGAIN);
+    if (errorOccured) {
+        if (noDataToReadTimeout) {
+            return YES;
+        } else {
+            return NO;
+        }
+    }
     return YES;
 }
 
