@@ -117,7 +117,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     // https://developer.apple.com/library/ios/documentation/System/Conceptual/ManPages_iPhoneOS/man2/recv.2.html
     
     char buffer[128];
-    int result = recv(_socketFD, &buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
+    int result = recv(_socketFD, buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT);
     BOOL peerClosedConnection = (result == 0);
     if (peerClosedConnection) {
         return NO;
