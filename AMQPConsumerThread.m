@@ -102,9 +102,9 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
 
 - (void)main
 {
-    // atomicity of _started iVar (as now or as before using a lock queue) does not guarantee critical section for the entire method.
-    // fix using appropriace lock mechanism and stop method accordingly (adebortoli 14.01.2014)
     @autoreleasepool {
+        self.started = YES;
+
         NSLog(@"<starting: consumer_thread: (%p) topic: %@>", self, _topic);
         NSError *error = nil;
         if (![self _setup:&error]) {
@@ -117,8 +117,6 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
             }
             return;
         }
-        
-        self.started = YES;
         
         if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStart:)]) {
             dispatch_sync(_callbackQueue, ^{
@@ -143,16 +141,18 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
         }
         
         NSLog(@"<stopping: consumer_thread: (%p) topic: %@>", self, _topic);
+
         [self _tearDown];
-        NSLog(@"<stopped: consumer_thread: (%p) topic: %@>", self, _topic);
-        
-        self.started = NO;
-        
+
         if ([self.delegate respondsToSelector:@selector(amqpConsumerThreadDidStop:)]) {
             dispatch_async(_callbackQueue, ^{
                 [self.delegate amqpConsumerThreadDidStop:self];
             });
         }
+
+        self.started = NO;
+
+        NSLog(@"<stopped: consumer_thread: (%p) topic: %@>", self, _topic);
     }
 }
 
@@ -162,9 +162,10 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
 {
     [self cancel];
     
-    BOOL stopped = NO;
-    while(!stopped) { // this thing is WRONG (adebortoli 14.01.2014)
+    BOOL stopped = !self.started;
+    while(!stopped) {
         stopped = !self.started;
+        usleep(100000); // sleep for 0.1 sec
     }
 }
 
