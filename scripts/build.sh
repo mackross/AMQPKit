@@ -13,6 +13,17 @@ make
 lipo -info librabbitmq/.libs/librabbitmq.a
 mv librabbitmq/.libs/librabbitmq.a librabbitmq.a.i386
 
+echo "Will build x86_64 rabbitmq-c library for iOS Simulator"
+make clean
+
+./configure --host=i386-apple-darwin --with-ssl=no --enable-static \
+  CC="/usr/bin/clang -arch x86_64" \
+  LD=$DEVROOT/usr/bin/ld
+
+make
+lipo -info librabbitmq/.libs/librabbitmq.a
+mv librabbitmq/.libs/librabbitmq.a librabbitmq.a.x86_64
+
 echo "Will build armv7 rabbitmq-c library for iOS Devices"
 make clean
 
@@ -61,5 +72,5 @@ mv librabbitmq/.libs/librabbitmq.a librabbitmq.a.arm64
 echo "Will merge libs"
 
 DEVROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer
-$DEVROOT/usr/bin/lipo -arch armv7 librabbitmq.a.armv7 -arch armv7s librabbitmq.a.armv7s -arch i386 librabbitmq.a.i386 -arch arm64 librabbitmq.a.arm64 -create -output librabbitmq.a
+$DEVROOT/usr/bin/lipo -arch armv7 librabbitmq.a.armv7 -arch armv7s librabbitmq.a.armv7s -arch i386 librabbitmq.a.i386 -arch arm64 librabbitmq.a.arm64 -arch x86_64 librabbitmq.a.x86_64 -create -output librabbitmq.a
 file librabbitmq.a
