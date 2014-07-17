@@ -115,6 +115,7 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
                     [self.delegate amqpConsumerThread:self didFailWithError:error];
                 });
             }
+            self.started = NO;
             return;
         }
         

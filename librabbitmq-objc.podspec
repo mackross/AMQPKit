@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'librabbitmq-objc'
-  s.version  = '0.4.9ctx-ARC-leaked'
+  s.version  = '0.4.10ctx-ARC-leaked'
   s.summary  = 'Objective-C wrapper for librabbitmq-c'
   s.homepage     = "http://ef.com"
   
@@ -9,8 +9,6 @@ Pod::Spec.new do |s|
   s.authors      = {
     "Marco Cattai"      => "marco.cattai@ef.com",
     "Stefan Ceriu"      => "stefan.ceriu@ef.com",
-    "Alberto DeBortoli" => "alberto.debortoli@ef.com",
-    "Pedro Gomes"       => "pedro.gomes@ef.com",
     "Dmitry Makarenko"  => "dmitry.makarenko@ef.com"}
 
   s.platform     = :ios
