@@ -45,6 +45,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 {
     if ((self = [super init])) {
 		_internalConnection = amqp_new_connection();
+        _socketFD = 0;
 		_nextChannel = 1;
 	}
 	
@@ -67,6 +68,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     fcntl(_socketFD, F_SETNOSIGPIPE, 1);
     
 	if (_socketFD < 0) {
+        _socketFD = 0;
 		[NSException raise:kAMQPConnectionException format:@"Unable to open socket to host %@ on port %d", host, port];
 	}
 
@@ -84,13 +86,16 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (void)disconnect
 {
-	amqp_rpc_reply_t reply = amqp_connection_close(_internalConnection, AMQP_REPLY_SUCCESS);
+    if (_socketFD <= 0) {
+        [NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: this instance of AMQPConnection has not been connected yet or the connection previously failed."];
+    }
+
+    amqp_rpc_reply_t reply = amqp_connection_close(_internalConnection, AMQP_REPLY_SUCCESS);
 	close(_socketFD);
 	
 	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
 		[NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: %@", [self errorDescriptionForReply:reply]];
 	}
-	
 }
 
 - (void)checkLastOperation:(NSString *)context
