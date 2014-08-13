@@ -1,1 +1,2 @@
-pod 'librabbitmq-objc', :path => '../'
+# pod 'librabbitmq-objc', :path => '../'
+pod 'librabbitmq-objc', '0.6.1ctx'
