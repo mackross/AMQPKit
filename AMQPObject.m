@@ -63,7 +63,7 @@
                     break;
                 }
                 default:
-                    return [NSString stringWithFormat:@"unknown error %d", reply.reply.id];
+                    return [NSString stringWithFormat:@"unknown error %u", reply.reply.id];
                     break;
             }
 			break;
