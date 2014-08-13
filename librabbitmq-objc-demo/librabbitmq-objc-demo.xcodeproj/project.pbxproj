@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B25C53AED3433D46D1B0EB4D /* librabbitmq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B25C52CA574B8EDEEE8BA441 /* librabbitmq.a */; };
+		47AE446CF3BC4D65966EF7B3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13D6812BD91B49AB88E92B48 /* libPods.a */; };
 		D3CD115E188428CB002E9316 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD115D188428CB002E9316 /* Foundation.framework */; };
 		D3CD1160188428CB002E9316 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD115F188428CB002E9316 /* CoreGraphics.framework */; };
 		D3CD1162188428CB002E9316 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD1161188428CB002E9316 /* UIKit.framework */; };
@@ -15,23 +15,12 @@
 		D3CD116A188428CB002E9316 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD1169188428CB002E9316 /* main.m */; };
 		D3CD116E188428CB002E9316 /* CTXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD116D188428CB002E9316 /* CTXAppDelegate.m */; };
 		D3CD1170188428CB002E9316 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3CD116F188428CB002E9316 /* Images.xcassets */; };
-		D3CD11A11884396C002E9316 /* AMQPChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD118D1884396C002E9316 /* AMQPChannel.m */; };
-		D3CD11A21884396C002E9316 /* AMQPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD118F1884396C002E9316 /* AMQPConnection.m */; };
-		D3CD11A31884396C002E9316 /* AMQPConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11911884396C002E9316 /* AMQPConsumer.m */; };
-		D3CD11A41884396C002E9316 /* AMQPConsumerThread.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11931884396C002E9316 /* AMQPConsumerThread.m */; };
-		D3CD11A51884396C002E9316 /* AMQPExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11961884396C002E9316 /* AMQPExchange.m */; };
-		D3CD11A61884396C002E9316 /* AMQPExchange+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11981884396C002E9316 /* AMQPExchange+Additions.m */; };
-		D3CD11A71884396C002E9316 /* AMQPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD119A1884396C002E9316 /* AMQPMessage.m */; };
-		D3CD11A81884396C002E9316 /* AMQPObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD119C1884396C002E9316 /* AMQPObject.m */; };
-		D3CD11A91884396C002E9316 /* AMQPQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD119E1884396C002E9316 /* AMQPQueue.m */; };
-		D3CD11AA1884396C002E9316 /* AMQPTTLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CD11A01884396C002E9316 /* AMQPTTLManager.m */; };
 		D3CD11C518843A32002E9316 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD11C418843A32002E9316 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B25C52A6AE5F6394D4C0D797 /* amqp_framing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_framing.h; sourceTree = "<group>"; };
-		B25C52CA574B8EDEEE8BA441 /* librabbitmq.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librabbitmq.a; sourceTree = "<group>"; };
-		B25C54E0B6BC6916D4E64C2B /* amqp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp.h; sourceTree = "<group>"; };
+		13D6812BD91B49AB88E92B48 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		851D089F4D564CF69E1D56F0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		D3CD115A188428CB002E9316 /* librabbitmq-objc-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "librabbitmq-objc-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3CD115D188428CB002E9316 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D3CD115F188428CB002E9316 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -47,33 +36,8 @@
 		D3CD117E188428CB002E9316 /* librabbitmq-objc-demoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "librabbitmq-objc-demoTests-Info.plist"; sourceTree = "<group>"; };
 		D3CD1180188428CB002E9316 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D3CD1182188428CB002E9316 /* librabbitmq_objc_demoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = librabbitmq_objc_demoTests.m; sourceTree = "<group>"; };
-		D3CD118C1884396C002E9316 /* AMQPChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPChannel.h; path = ../../AMQPChannel.h; sourceTree = "<group>"; };
-		D3CD118D1884396C002E9316 /* AMQPChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPChannel.m; path = ../../AMQPChannel.m; sourceTree = "<group>"; };
-		D3CD118E1884396C002E9316 /* AMQPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPConnection.h; path = ../../AMQPConnection.h; sourceTree = "<group>"; };
-		D3CD118F1884396C002E9316 /* AMQPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPConnection.m; path = ../../AMQPConnection.m; sourceTree = "<group>"; };
-		D3CD11901884396C002E9316 /* AMQPConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPConsumer.h; path = ../../AMQPConsumer.h; sourceTree = "<group>"; };
-		D3CD11911884396C002E9316 /* AMQPConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPConsumer.m; path = ../../AMQPConsumer.m; sourceTree = "<group>"; };
-		D3CD11921884396C002E9316 /* AMQPConsumerThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPConsumerThread.h; path = ../../AMQPConsumerThread.h; sourceTree = "<group>"; };
-		D3CD11931884396C002E9316 /* AMQPConsumerThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPConsumerThread.m; path = ../../AMQPConsumerThread.m; sourceTree = "<group>"; };
-		D3CD11941884396C002E9316 /* AMQPConsumerThreadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPConsumerThreadDelegate.h; path = ../../AMQPConsumerThreadDelegate.h; sourceTree = "<group>"; };
-		D3CD11951884396C002E9316 /* AMQPExchange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPExchange.h; path = ../../AMQPExchange.h; sourceTree = "<group>"; };
-		D3CD11961884396C002E9316 /* AMQPExchange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPExchange.m; path = ../../AMQPExchange.m; sourceTree = "<group>"; };
-		D3CD11971884396C002E9316 /* AMQPExchange+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "AMQPExchange+Additions.h"; path = "../../AMQPExchange+Additions.h"; sourceTree = "<group>"; };
-		D3CD11981884396C002E9316 /* AMQPExchange+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "AMQPExchange+Additions.m"; path = "../../AMQPExchange+Additions.m"; sourceTree = "<group>"; };
-		D3CD11991884396C002E9316 /* AMQPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPMessage.h; path = ../../AMQPMessage.h; sourceTree = "<group>"; };
-		D3CD119A1884396C002E9316 /* AMQPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPMessage.m; path = ../../AMQPMessage.m; sourceTree = "<group>"; };
-		D3CD119B1884396C002E9316 /* AMQPObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPObject.h; path = ../../AMQPObject.h; sourceTree = "<group>"; };
-		D3CD119C1884396C002E9316 /* AMQPObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPObject.m; path = ../../AMQPObject.m; sourceTree = "<group>"; };
-		D3CD119D1884396C002E9316 /* AMQPQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPQueue.h; path = ../../AMQPQueue.h; sourceTree = "<group>"; };
-		D3CD119E1884396C002E9316 /* AMQPQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPQueue.m; path = ../../AMQPQueue.m; sourceTree = "<group>"; };
-		D3CD119F1884396C002E9316 /* AMQPTTLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPTTLManager.h; path = ../../AMQPTTLManager.h; sourceTree = "<group>"; };
-		D3CD11A01884396C002E9316 /* AMQPTTLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMQPTTLManager.m; path = ../../AMQPTTLManager.m; sourceTree = "<group>"; };
-		D3CD11AC1884398D002E9316 /* AMQPWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMQPWrapper.h; path = ../../AMQPWrapper.h; sourceTree = "<group>"; };
 		D3CD11C418843A32002E9316 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D3CD11C718843B83002E9316 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		D3CD11CC18843D3B002E9316 /* librabbitmq-objc.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "librabbitmq-objc.podspec"; path = "../librabbitmq-objc.podspec"; sourceTree = "<group>"; };
-		D3CD11CD18843D3B002E9316 /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.md; path = ../LICENSE.md; sourceTree = "<group>"; };
-		D3CD11CE18843D3B002E9316 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,36 +49,21 @@
 				D3CD1160188428CB002E9316 /* CoreGraphics.framework in Frameworks */,
 				D3CD1162188428CB002E9316 /* UIKit.framework in Frameworks */,
 				D3CD115E188428CB002E9316 /* Foundation.framework in Frameworks */,
-				B25C53AED3433D46D1B0EB4D /* librabbitmq.a in Frameworks */,
+				47AE446CF3BC4D65966EF7B3 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B25C52EB4E498086346E29C8 /* rabbitmq-c-v0.5.1 */ = {
-			isa = PBXGroup;
-			children = (
-				B25C54E0B6BC6916D4E64C2B /* amqp.h */,
-				B25C52CA574B8EDEEE8BA441 /* librabbitmq.a */,
-				B25C52A6AE5F6394D4C0D797 /* amqp_framing.h */,
-			);
-			name = "rabbitmq-c-v0.5.1";
-			path = "../rabbitmq-c-v0.5.1";
-			sourceTree = "<group>";
-		};
 		D3CD1151188428CB002E9316 = {
 			isa = PBXGroup;
 			children = (
-				D3CD11AB18843971002E9316 /* librabbitmq-objc */,
-				D3CD11CC18843D3B002E9316 /* librabbitmq-objc.podspec */,
-				D3CD11CD18843D3B002E9316 /* LICENSE.md */,
-				D3CD11CE18843D3B002E9316 /* README.md */,
 				D3CD1163188428CB002E9316 /* librabbitmq-objc-demo */,
 				D3CD117C188428CB002E9316 /* librabbitmq-objc-demoTests */,
 				D3CD115C188428CB002E9316 /* Frameworks */,
 				D3CD115B188428CB002E9316 /* Products */,
-				B25C52EB4E498086346E29C8 /* rabbitmq-c-v0.5.1 */,
+				851D089F4D564CF69E1D56F0 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -135,6 +84,7 @@
 				D3CD115F188428CB002E9316 /* CoreGraphics.framework */,
 				D3CD1161188428CB002E9316 /* UIKit.framework */,
 				D3CD1176188428CB002E9316 /* XCTest.framework */,
+				13D6812BD91B49AB88E92B48 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -179,36 +129,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		D3CD11AB18843971002E9316 /* librabbitmq-objc */ = {
-			isa = PBXGroup;
-			children = (
-				D3CD11AC1884398D002E9316 /* AMQPWrapper.h */,
-				D3CD118C1884396C002E9316 /* AMQPChannel.h */,
-				D3CD118D1884396C002E9316 /* AMQPChannel.m */,
-				D3CD118E1884396C002E9316 /* AMQPConnection.h */,
-				D3CD118F1884396C002E9316 /* AMQPConnection.m */,
-				D3CD11901884396C002E9316 /* AMQPConsumer.h */,
-				D3CD11911884396C002E9316 /* AMQPConsumer.m */,
-				D3CD11921884396C002E9316 /* AMQPConsumerThread.h */,
-				D3CD11931884396C002E9316 /* AMQPConsumerThread.m */,
-				D3CD11941884396C002E9316 /* AMQPConsumerThreadDelegate.h */,
-				D3CD11951884396C002E9316 /* AMQPExchange.h */,
-				D3CD11961884396C002E9316 /* AMQPExchange.m */,
-				D3CD11971884396C002E9316 /* AMQPExchange+Additions.h */,
-				D3CD11981884396C002E9316 /* AMQPExchange+Additions.m */,
-				D3CD11991884396C002E9316 /* AMQPMessage.h */,
-				D3CD119A1884396C002E9316 /* AMQPMessage.m */,
-				D3CD119B1884396C002E9316 /* AMQPObject.h */,
-				D3CD119C1884396C002E9316 /* AMQPObject.m */,
-				D3CD119D1884396C002E9316 /* AMQPQueue.h */,
-				D3CD119E1884396C002E9316 /* AMQPQueue.m */,
-				D3CD119F1884396C002E9316 /* AMQPTTLManager.h */,
-				D3CD11A01884396C002E9316 /* AMQPTTLManager.m */,
-			);
-			name = "librabbitmq-objc";
-			path = "librabbitmq-objc-demo";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -216,9 +136,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D3CD1186188428CB002E9316 /* Build configuration list for PBXNativeTarget "librabbitmq-objc-demo" */;
 			buildPhases = (
+				8A3A6AA3252847B4B745757A /* Check Pods Manifest.lock */,
 				D3CD1156188428CB002E9316 /* Sources */,
 				D3CD1157188428CB002E9316 /* Frameworks */,
 				D3CD1158188428CB002E9316 /* Resources */,
+				023B14851EA64B748E6E9433 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -268,23 +190,46 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		023B14851EA64B748E6E9433 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8A3A6AA3252847B4B745757A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D3CD1156188428CB002E9316 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3CD11A41884396C002E9316 /* AMQPConsumerThread.m in Sources */,
-				D3CD11A51884396C002E9316 /* AMQPExchange.m in Sources */,
-				D3CD11A31884396C002E9316 /* AMQPConsumer.m in Sources */,
 				D3CD116E188428CB002E9316 /* CTXAppDelegate.m in Sources */,
-				D3CD11A11884396C002E9316 /* AMQPChannel.m in Sources */,
-				D3CD11A91884396C002E9316 /* AMQPQueue.m in Sources */,
-				D3CD11A71884396C002E9316 /* AMQPMessage.m in Sources */,
-				D3CD11A21884396C002E9316 /* AMQPConnection.m in Sources */,
 				D3CD116A188428CB002E9316 /* main.m in Sources */,
-				D3CD11AA1884396C002E9316 /* AMQPTTLManager.m in Sources */,
-				D3CD11A61884396C002E9316 /* AMQPExchange+Additions.m in Sources */,
-				D3CD11A81884396C002E9316 /* AMQPObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,7 +293,7 @@
 					"$(SRCROOT)/../rabbitmq-leaked",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../rabbitmq-leaked",
@@ -391,7 +336,7 @@
 					"$(SRCROOT)/../rabbitmq-leaked",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../rabbitmq-leaked",
@@ -404,6 +349,7 @@
 		};
 		D3CD1187188428CB002E9316 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 851D089F4D564CF69E1D56F0 /* Pods.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -412,16 +358,11 @@
 				GCC_PREFIX_HEADER = "librabbitmq-objc-demo/librabbitmq-objc-demo-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../rabbitmq-leaked",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "librabbitmq-objc-demo/librabbitmq-objc-demo-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/dmakarenko/Projects/librabbitmq-objc/rabbitmq-leaked",
-					"\"${PROJECT_DIR}/rabbitmq-c-v0.5.1\"/**",
-					"\"${PROJECT_DIR}/../rabbitmq-c-v0.5.1\"/**",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -429,6 +370,7 @@
 		};
 		D3CD1188188428CB002E9316 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 851D089F4D564CF69E1D56F0 /* Pods.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -437,16 +379,11 @@
 				GCC_PREFIX_HEADER = "librabbitmq-objc-demo/librabbitmq-objc-demo-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../rabbitmq-leaked",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "librabbitmq-objc-demo/librabbitmq-objc-demo-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/dmakarenko/Projects/librabbitmq-objc/rabbitmq-leaked",
-					"\"${PROJECT_DIR}/rabbitmq-c-v0.5.1\"/**",
-					"\"${PROJECT_DIR}/../rabbitmq-c-v0.5.1\"/**",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
