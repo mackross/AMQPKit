@@ -16,9 +16,9 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '5.1'
   
   s.homepage = 'https://github.com/EFEdcuationFirstMobile/librabbitmq-objc'
-  s.preserve_paths = 'rabbitmq-c-v0.5.1/librabbitmq.a'
+  s.preserve_paths = 'rabbitmq-c/librabbitmq.a'
   s.source   = { :git => 'git@github.com:EFEdcuationFirstMobile/librabbitmq-objc.git', :tag => "#{s.version}" }
-  s.source_files = '*.{h,m}', 'rabbitmq-c-v0.5.1/*.h'
+  s.source_files = '*.{h,m}', 'rabbitmq-c/*.h'
   s.requires_arc = true
   
 end
