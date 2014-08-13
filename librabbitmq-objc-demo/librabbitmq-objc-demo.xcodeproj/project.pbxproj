@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07A61C5A189A6FC0005B2CE7 /* librabbitmq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07A61C58189A6FC0005B2CE7 /* librabbitmq.a */; };
+		B25C53AED3433D46D1B0EB4D /* librabbitmq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B25C52CA574B8EDEEE8BA441 /* librabbitmq.a */; };
 		D3CD115E188428CB002E9316 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD115D188428CB002E9316 /* Foundation.framework */; };
 		D3CD1160188428CB002E9316 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD115F188428CB002E9316 /* CoreGraphics.framework */; };
 		D3CD1162188428CB002E9316 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CD1161188428CB002E9316 /* UIKit.framework */; };
@@ -29,12 +29,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		07A61C54189A6FC0005B2CE7 /* amqp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp.h; sourceTree = "<group>"; };
-		07A61C55189A6FC0005B2CE7 /* amqp_framing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_framing.h; sourceTree = "<group>"; };
-		07A61C56189A6FC0005B2CE7 /* amqp_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_private.h; sourceTree = "<group>"; };
-		07A61C57189A6FC0005B2CE7 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		07A61C58189A6FC0005B2CE7 /* librabbitmq.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librabbitmq.a; sourceTree = "<group>"; };
-		07A61C59189A6FC0005B2CE7 /* socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = socket.h; sourceTree = "<group>"; };
+		B25C52A6AE5F6394D4C0D797 /* amqp_framing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_framing.h; sourceTree = "<group>"; };
+		B25C52CA574B8EDEEE8BA441 /* librabbitmq.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librabbitmq.a; sourceTree = "<group>"; };
+		B25C54E0B6BC6916D4E64C2B /* amqp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp.h; sourceTree = "<group>"; };
 		D3CD115A188428CB002E9316 /* librabbitmq-objc-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "librabbitmq-objc-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3CD115D188428CB002E9316 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D3CD115F188428CB002E9316 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -87,32 +84,28 @@
 				D3CD11C518843A32002E9316 /* SystemConfiguration.framework in Frameworks */,
 				D3CD1160188428CB002E9316 /* CoreGraphics.framework in Frameworks */,
 				D3CD1162188428CB002E9316 /* UIKit.framework in Frameworks */,
-				07A61C5A189A6FC0005B2CE7 /* librabbitmq.a in Frameworks */,
 				D3CD115E188428CB002E9316 /* Foundation.framework in Frameworks */,
+				B25C53AED3433D46D1B0EB4D /* librabbitmq.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		07A61C53189A6FC0005B2CE7 /* rabbitmq-leaked */ = {
+		B25C52EB4E498086346E29C8 /* rabbitmq-c-v0.5.1 */ = {
 			isa = PBXGroup;
 			children = (
-				07A61C54189A6FC0005B2CE7 /* amqp.h */,
-				07A61C55189A6FC0005B2CE7 /* amqp_framing.h */,
-				07A61C56189A6FC0005B2CE7 /* amqp_private.h */,
-				07A61C57189A6FC0005B2CE7 /* config.h */,
-				07A61C58189A6FC0005B2CE7 /* librabbitmq.a */,
-				07A61C59189A6FC0005B2CE7 /* socket.h */,
+				B25C54E0B6BC6916D4E64C2B /* amqp.h */,
+				B25C52CA574B8EDEEE8BA441 /* librabbitmq.a */,
+				B25C52A6AE5F6394D4C0D797 /* amqp_framing.h */,
 			);
-			name = "rabbitmq-leaked";
-			path = "../rabbitmq-leaked";
+			name = "rabbitmq-c-v0.5.1";
+			path = "../rabbitmq-c-v0.5.1";
 			sourceTree = "<group>";
 		};
 		D3CD1151188428CB002E9316 = {
 			isa = PBXGroup;
 			children = (
-				07A61C53189A6FC0005B2CE7 /* rabbitmq-leaked */,
 				D3CD11AB18843971002E9316 /* librabbitmq-objc */,
 				D3CD11CC18843D3B002E9316 /* librabbitmq-objc.podspec */,
 				D3CD11CD18843D3B002E9316 /* LICENSE.md */,
@@ -121,6 +114,7 @@
 				D3CD117C188428CB002E9316 /* librabbitmq-objc-demoTests */,
 				D3CD115C188428CB002E9316 /* Frameworks */,
 				D3CD115B188428CB002E9316 /* Products */,
+				B25C52EB4E498086346E29C8 /* rabbitmq-c-v0.5.1 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -425,6 +419,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/dmakarenko/Projects/librabbitmq-objc/rabbitmq-leaked",
+					"\"${PROJECT_DIR}/rabbitmq-c-v0.5.1\"/**",
+					"\"${PROJECT_DIR}/../rabbitmq-c-v0.5.1\"/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -448,6 +444,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/dmakarenko/Projects/librabbitmq-objc/rabbitmq-leaked",
+					"\"${PROJECT_DIR}/rabbitmq-c-v0.5.1\"/**",
+					"\"${PROJECT_DIR}/../rabbitmq-c-v0.5.1\"/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
