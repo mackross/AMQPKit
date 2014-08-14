@@ -25,7 +25,7 @@
 
 @interface AMQPChannel : AMQPObject
 
-@property (readonly) amqp_channel_t internalChannel;
+@property (readonly) amqp_channel_t internalChannel __deprecated;
 @property (readonly) AMQPConnection *connection;
 
 - (void)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection;

@@ -29,7 +29,7 @@
 
 @implementation AMQPChannel
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) {
 		_internalChannel = 0;
@@ -47,16 +47,17 @@
 {
 	_connection = connection;
 	_internalChannel = channel;
-	
+
 	amqp_channel_open(_connection.internalConnection, _internalChannel);
-	
+
 	[_connection checkLastOperation:@"Failed to open a channel"];
 }
 
 - (void)close
 {
-    if (_internalChannel
-    amqp_channel_close(_connection.internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
+    if (0 != _internalChannel) {
+        amqp_channel_close(_connection.internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
+    }
 }
 
 @end
