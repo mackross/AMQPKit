@@ -37,12 +37,7 @@
         }
 			
 		case AMQP_RESPONSE_LIBRARY_EXCEPTION: {
-			if (reply.library_error) {
-				return [NSString stringWithUTF8String:strerror(reply.library_error)];
-			}
-			else {
-				return @"(end-of-stream)";
-			}
+            return [NSString stringWithUTF8String:amqp_error_string2(reply.library_error)];
 			break;
         }
             
