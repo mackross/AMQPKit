@@ -19,33 +19,37 @@
 
 #import <unistd.h>
 #import <netinet/tcp.h>
-
 #import <sys/socket.h>
 
+#import "amqp.h"
+#import "amqp_tcp_socket.h"
+#import "amqp_socket.h"
+
 #import "AMQPConnection.h"
+
 #import "AMQPChannel.h"
 
 NSString *const kAMQPConnectionException    = @"AMQPConnectionException";
 NSString *const kAMQPLoginException         = @"AMQPLoginException";
 NSString *const kAMQPOperationException     = @"AMQPException";
 
-@interface AMQPConnection ()
-
-@property (assign, readwrite) amqp_connection_state_t internalConnection;
-
-@end
-
 @implementation AMQPConnection
 {
-	int _socketFD;
-	unsigned int _nextChannel;
+    amqp_connection_state_t _internalConnection;
+    amqp_socket_t *_socket;
+
+    amqp_channel_t _nextChannel;
 }
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) {
 		_internalConnection = amqp_new_connection();
-        _socketFD = 0;
+        if (!_internalConnection) {
+            [NSException raise:kAMQPConnectionException format:@"Unable to create a new AMQP connection"];
+        }
+        _socket = NULL;
+
 		_nextChannel = 1;
 	}
 	
@@ -54,25 +58,50 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (void)dealloc
 {
-    // this was commented by pdcgomes on 23 January 2013 in [bab486a], to verify
-    // [self disconnect];
-	
+    if (_socket) {
+        [self disconnect];
+    }
+
 	amqp_destroy_connection(_internalConnection);
 }
 
 - (void)connectToHost:(NSString *)host onPort:(int)port
 {
-	_socketFD = amqp_open_socket([host UTF8String], port);
-    fcntl(_socketFD, F_SETFL, O_NONBLOCK);
-    fcntl(_socketFD, F_SETFL, O_ASYNC);
-    fcntl(_socketFD, F_SETNOSIGPIPE, 1);
-    
-	if (_socketFD < 0) {
-        _socketFD = 0;
-		[NSException raise:kAMQPConnectionException format:@"Unable to open socket to host %@ on port %d", host, port];
+    const __darwin_time_t kSocketOpenTimeout = 30;
+
+    struct timeval *timeout = malloc(sizeof(struct timeval));
+    if (!timeout) {
+        [NSException raise:kAMQPConnectionException format:@"Out of memory"];
+    }
+    timeout->tv_sec = kSocketOpenTimeout;
+
+    _socket = amqp_tcp_socket_new(_internalConnection);
+    if (!_socket) {
+        _socket = NULL;
+		[NSException raise:kAMQPConnectionException format:@"Unable to create a TCP socket"];
 	}
 
-	amqp_set_sockfd(_internalConnection, _socketFD);
+    // If necessary: set socket properties here (_socketFD should be a property in that case) (dmakarenko 14.08.2014)
+//    This function must not be used in conjunction with amqp_socket_open(), i.e.
+//    the socket connection should already be open(2) when this function is
+//    called.
+
+//	int _socketFD = open([host UTF8String], port);
+//    fcntl(_socketFD, F_SETFL, O_NONBLOCK);
+//    fcntl(_socketFD, F_SETFL, O_ASYNC);
+//    fcntl(_socketFD, F_SETNOSIGPIPE, 1);
+//
+//	if (_socketFD < 0) {
+//        _socketFD = 0;
+//		[NSException raise:kAMQPConnectionException format:@"Unable to open socket to host %@ on port %d", host, port];
+//	}
+//    amqp_tcp_socket_set_sockfd(_socket, _socketFD);
+
+
+    int status = amqp_socket_open_noblock(_socket, [host UTF8String], port, timeout);
+	if (status != AMQP_STATUS_OK) {
+		[NSException raise:kAMQPConnectionException format:@"Unable to open a TCP socket to host %@ on port %d. Error: %@ (%d)", host, port, [NSString stringWithUTF8String:amqp_error_string2(status)], status];
+	}
 }
 
 - (void)loginAsUser:(NSString *)username withPassword:(NSString *)password onVHost:(NSString *)vhost
@@ -86,16 +115,17 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (void)disconnect
 {
-    if (_socketFD <= 0) {
+    if (!_socket) {
         [NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: this instance of AMQPConnection has not been connected yet or the connection previously failed."];
     }
 
     amqp_rpc_reply_t reply = amqp_connection_close(_internalConnection, AMQP_REPLY_SUCCESS);
-	close(_socketFD);
-	
+
 	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
 		[NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: %@", [self errorDescriptionForReply:reply]];
 	}
+
+    _socket = NULL;
 }
 
 - (void)checkLastOperation:(NSString *)context
@@ -111,7 +141,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 {
 	AMQPChannel *channel = [[AMQPChannel alloc] init];
 	[channel openChannel:_nextChannel onConnection:self];
-	
+
 	_nextChannel++;
 
 	return channel;

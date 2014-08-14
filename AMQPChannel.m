@@ -32,7 +32,7 @@
 - (id)init
 {
     if ((self = [super init])) {
-		_internalChannel = -1;
+		_internalChannel = 0;
 	}
 	
 	return self;
@@ -43,7 +43,7 @@
     [self close];
 }
 
-- (void)openChannel:(unsigned int)channel onConnection:(AMQPConnection *)connection
+- (void)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection
 {
 	_connection = connection;
 	_internalChannel = channel;
@@ -55,6 +55,7 @@
 
 - (void)close
 {
+    if (_internalChannel
     amqp_channel_close(_connection.internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
 }
 

@@ -44,7 +44,7 @@
 
 @property (readonly) NSString *consumerTag;
 @property (readonly) uint64_t deliveryTag;
-@property (readonly) BOOL redelivered;
+@property (readonly) amqp_boolean_t redelivered;
 @property (readonly) NSString *exchangeName;
 @property (readonly) NSString *routingKey;
 
