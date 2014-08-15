@@ -27,7 +27,7 @@
 
 @interface AMQPQueue : AMQPObject
 
-@property (readonly) amqp_bytes_t internalQueue;
+@property (readonly) amqp_bytes_t internalQueue __deprecated;
 @property (readonly) AMQPChannel *channel;
 
 - (id)initWithName:(NSString *)theName onChannel:(AMQPChannel *)theChannel isPassive:(BOOL)passive isExclusive:(BOOL)exclusive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;

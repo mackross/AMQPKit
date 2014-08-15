@@ -27,7 +27,7 @@
 
 @interface AMQPConsumer : AMQPObject
 
-@property (readonly) amqp_bytes_t internalConsumer;
+@property (readonly) amqp_bytes_t internalConsumer __deprecated;
 @property (readonly) AMQPChannel *channel;
 @property (readonly) AMQPQueue *queue;
 
