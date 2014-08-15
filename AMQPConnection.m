@@ -54,11 +54,15 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
 - (void)dealloc
 {
-    if (_socket) {
+    @try {
         [self disconnect];
     }
-
-	amqp_destroy_connection(_internalConnection);
+    @catch (NSException *exception) {
+        NSLog(@"[AMQPConnection] Problem disconnecting: %@", exception);
+    }
+    @finally {
+        amqp_destroy_connection(_internalConnection);
+    }
 }
 
 - (void)connectToHost:(NSString *)host onPort:(int)port
