@@ -17,10 +17,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <unistd.h>
-#import <netinet/tcp.h>
-#import <sys/socket.h>
-
 #import "amqp.h"
 #import "amqp_tcp_socket.h"
 #import "amqp_socket.h"
@@ -80,23 +76,6 @@ NSString *const kAMQPOperationException     = @"AMQPException";
         _socket = NULL;
 		[NSException raise:kAMQPConnectionException format:@"Unable to create a TCP socket"];
 	}
-
-    // If necessary: set socket properties here (_socketFD should be a property in that case) (dmakarenko 14.08.2014)
-//    This function must not be used in conjunction with amqp_socket_open(), i.e.
-//    the socket connection should already be open(2) when this function is
-//    called.
-
-//	int _socketFD = open([host UTF8String], port);
-//    fcntl(_socketFD, F_SETFL, O_NONBLOCK);
-//    fcntl(_socketFD, F_SETFL, O_ASYNC);
-//    fcntl(_socketFD, F_SETNOSIGPIPE, 1);
-//
-//	if (_socketFD < 0) {
-//        _socketFD = 0;
-//		[NSException raise:kAMQPConnectionException format:@"Unable to open socket to host %@ on port %d", host, port];
-//	}
-//    amqp_tcp_socket_set_sockfd(_socket, _socketFD);
-
 
     int status = amqp_socket_open_noblock(_socket, [host UTF8String], port, timeout);
 	if (status != AMQP_STATUS_OK) {
