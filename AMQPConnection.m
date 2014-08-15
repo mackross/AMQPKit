@@ -100,6 +100,12 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 
     int status = amqp_socket_open_noblock(_socket, [host UTF8String], port, timeout);
 	if (status != AMQP_STATUS_OK) {
+        amqp_rpc_reply_t reply = amqp_connection_close(_internalConnection, AMQP_REPLY_SUCCESS);
+        if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
+            NSLog(@"DEBUG: Problem closing the connection: %@", [self errorDescriptionForReply:reply]);
+        }
+        _socket = NULL;
+
 		[NSException raise:kAMQPConnectionException format:@"Unable to open a TCP socket to host %@ on port %d. Error: %@ (%d)", host, port, [NSString stringWithUTF8String:amqp_error_string2(status)], status];
 	}
 }
