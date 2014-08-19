@@ -8,6 +8,9 @@
 
 #import "CTXAppDelegate.h"
 
+#import "AMQPConnection.h"
+#import "AMQPChannel.h"
+
 @implementation CTXAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -16,6 +19,19 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    @try {
+        AMQPConnection *connection = [[AMQPConnection alloc] init];
+        [connection connectToHost:@"127.0.0.1" onPort:5672];
+        [connection loginAsUser:@"guest" withPassword:@"guest" onVHost:@"/"];
+        AMQPChannel *channel = [connection openChannel];
+        [channel close];
+    }
+    @catch (NSException *e) {
+        NSLog(@"Exception was raised while trying to connect to host: [%@]", e);
+    }
+    @finally {
+    }
     return YES;
 }
 
