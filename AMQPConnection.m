@@ -74,6 +74,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
         [NSException raise:kAMQPConnectionException format:@"Out of memory"];
     }
     timeout->tv_sec = kSocketOpenTimeout;
+    timeout->tv_usec = 0;
 
     _socket = amqp_tcp_socket_new(_internalConnection);
     if (!_socket) {
