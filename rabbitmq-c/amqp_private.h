@@ -200,62 +200,6 @@ static inline void *amqp_offset(void *data, size_t offset)
   return (char *)data + offset;
 }
 
-/* This macro defines the encoding and decoding functions associated with a
-   simple type. */
-
-#define DECLARE_CODEC_BASE_TYPE(bits, htonx, ntohx)                           \
-                                                                              \
-  static inline void amqp_e##bits(void *data, size_t offset,                  \
-                                  uint##bits##_t val)                         \
-  {                                                                           \
-    /* The AMQP data might be unaligned. So we encode and then copy the       \
-             result into place. */                                            \
-    uint##bits##_t res = htonx(val);                                          \
-    memcpy(amqp_offset(data, offset), &res, bits/8);                          \
-  }                                                                           \
-                                                                              \
-  static inline uint##bits##_t amqp_d##bits(void *data, size_t offset)        \
-  {                                                                           \
-    /* The AMQP data might be unaligned.  So we copy the source value         \
-             into a variable and then decode it. */                           \
-    uint##bits##_t val;                                                       \
-    memcpy(&val, amqp_offset(data, offset), bits/8);                          \
-    return ntohx(val);                                                        \
-  }                                                                           \
-                                                                              \
-  static inline int amqp_encode_##bits(amqp_bytes_t encoded, size_t *offset,  \
-                                       uint##bits##_t input)                  \
-                                                                              \
-  {                                                                           \
-    size_t o = *offset;                                                       \
-    if ((*offset = o + bits / 8) <= encoded.len) {                            \
-      amqp_e##bits(encoded.bytes, o, input);                                  \
-      return 1;                                                               \
-    }                                                                         \
-    else {                                                                    \
-      return 0;                                                               \
-    }                                                                         \
-  }                                                                           \
-                                                                              \
-  static inline int amqp_decode_##bits(amqp_bytes_t encoded, size_t *offset,  \
-                                       uint##bits##_t *output)                \
-                                                                              \
-  {                                                                           \
-    size_t o = *offset;                                                       \
-    if ((*offset = o + bits / 8) <= encoded.len) {                            \
-      *output = amqp_d##bits(encoded.bytes, o);                               \
-      return 1;                                                               \
-    }                                                                         \
-    else {                                                                    \
-      return 0;                                                               \
-    }                                                                         \
-  }
-
-DECLARE_CODEC_BASE_TYPE(8, (uint8_t), (uint8_t))
-DECLARE_CODEC_BASE_TYPE(16, htons, ntohs)
-DECLARE_CODEC_BASE_TYPE(32, htonl, ntohl)
-DECLARE_CODEC_BASE_TYPE(64, htonll, ntohll)
-
 static inline int amqp_encode_bytes(amqp_bytes_t encoded, size_t *offset,
                                     amqp_bytes_t input)
 {
