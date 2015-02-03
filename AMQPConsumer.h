@@ -33,5 +33,12 @@
 - (void)dealloc;
 
 - (AMQPMessage *)pop;
+- (BOOL)ack:(AMQPMessage *)message;
+
+
+/// all previous messages are acked too
+- (BOOL)ack:(AMQPMessage *)message multiple:(BOOL)multiple;
+
+- (BOOL)reject:(AMQPMessage *)message requeue:(BOOL)requeue;
 
 @end

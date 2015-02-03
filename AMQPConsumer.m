@@ -133,4 +133,21 @@
 	return message;
 }
 
+- (BOOL)ack:(AMQPMessage *)message
+{
+    return [self ack:message multiple:NO];
+}
+
+- (BOOL)ack:(AMQPMessage *)message multiple:(BOOL)multiple
+{
+   return amqp_basic_ack(_channel.connection.internalConnection, _channel.internalChannel, message.deliveryTag, multiple);
+}
+
+- (BOOL)reject:(AMQPMessage *)message requeue:(BOOL)requeue
+{
+    return amqp_basic_reject(_channel.connection.internalConnection, _channel.internalChannel, message.deliveryTag, requeue);
+}
+
+
+
 @end
