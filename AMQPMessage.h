@@ -18,8 +18,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <amqp.h>
 
-#import "AMQPObject.h"
 
 @class AMQPConsumer;
 @interface AMQPMessage : NSObject

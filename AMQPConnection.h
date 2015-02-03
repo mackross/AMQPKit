@@ -18,8 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import "AMQPObject.h"
+#import <amqp.h>
 
 extern NSString *const kAMQPConnectionException;
 extern NSString *const kAMQPLoginException;
@@ -27,15 +26,13 @@ extern NSString *const kAMQPOperationException;
 
 @class AMQPChannel;
 
-@interface AMQPConnection : AMQPObject
+@interface AMQPConnection : NSObject
 
-@property (nonatomic, readonly) amqp_connection_state_t internalConnection __deprecated;
 
 - (void)connectToHost:(NSString *)host onPort:(int)port;
 - (void)loginAsUser:(NSString *)username withPassword:(NSString *)password onVHost:(NSString *)vhost;
 - (void)disconnect; // all channels have to be closed before closing the connection
 
-- (void)checkLastOperation:(NSString *)context __deprecated;
 
 - (AMQPChannel *)openChannel;
 

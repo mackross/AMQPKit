@@ -22,7 +22,7 @@
 //#import <string.h>
 //#import <stdlib.h>
 
-#import "AMQPChannel.h"
+#import "AMQP+Private.h"
 #import "AMQPQueue.h"
 #import "AMQPMessage.h"
 #import "AMQPConnection.h"
@@ -39,7 +39,6 @@
 
 @interface AMQPConsumer ()
 
-@property (assign, readwrite) amqp_bytes_t internalConsumer;
 @property (strong, readwrite) AMQPChannel *channel;
 @property (strong, readwrite) AMQPQueue *queue;
 

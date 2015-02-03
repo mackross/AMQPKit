@@ -18,14 +18,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <amqp.h>
 
-#import "AMQPObject.h"
 
 @class AMQPChannel;
 
-@interface AMQPExchange : AMQPObject
+@interface AMQPExchange : NSObject
 
-@property (readonly) amqp_bytes_t internalExchange __deprecated;
 @property (readonly) AMQPChannel *channel;
 
 - (id)initExchangeOfType:(NSString *)theType withName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;

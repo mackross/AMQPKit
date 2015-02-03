@@ -18,6 +18,7 @@
 //
 
 #import "AMQPExchange.h"
+#import "AMQP+Private.h"
 
 #import "AMQPChannel.h"
 #import "AMQPConnection.h"
@@ -30,7 +31,6 @@
 
 @interface AMQPExchange ()
 
-@property (assign, readwrite) amqp_bytes_t internalExchange;
 @property (strong, readwrite) AMQPChannel *channel;
 
 @end

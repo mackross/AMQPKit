@@ -18,14 +18,12 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import "AMQPObject.h"
+#import <amqp.h>
 
 @class AMQPConnection;
 
-@interface AMQPChannel : AMQPObject
+@interface AMQPChannel : NSObject
 
-@property (readonly) amqp_channel_t internalChannel __deprecated;
 @property (readonly) AMQPConnection *connection;
 
 - (void)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection;

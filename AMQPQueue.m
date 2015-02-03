@@ -18,6 +18,7 @@
 //
 
 #import "AMQPQueue.h"
+#import "AMQP+Private.h"
 
 #import "AMQPChannel.h"
 #import "AMQPExchange.h"
@@ -29,7 +30,6 @@ uint16_t amqp_queue_msg_ttl = 60000;
 
 @interface AMQPQueue ()
 
-@property (assign, readwrite) amqp_bytes_t internalQueue;
 @property (strong, readwrite) AMQPChannel *channel;
 
 @end

@@ -22,6 +22,7 @@
 #import "amqp_socket.h"
 
 #import "AMQPConnection.h"
+#import "AMQPErrorDecoder.h"
 
 #import "AMQPChannel.h"
 
@@ -86,7 +87,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 	if (status != AMQP_STATUS_OK) {
         amqp_rpc_reply_t reply = amqp_connection_close(_internalConnection, AMQP_REPLY_SUCCESS);
         if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
-            NSLog(@"DEBUG: Problem closing the connection: %@", [self errorDescriptionForReply:reply]);
+            NSLog(@"DEBUG: Problem closing the connection: %@", [AMQPErrorDecoder errorDescriptionForReply:reply]);
         }
         _socket = NULL;
 
@@ -99,7 +100,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 	amqp_rpc_reply_t reply = amqp_login(_internalConnection, [vhost UTF8String], 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, [username UTF8String], [password UTF8String]);
 	
 	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
-		[NSException raise:kAMQPLoginException format:@"Failed to login to server as user %@ on vhost %@ using password %@: %@", username, vhost, password, [self errorDescriptionForReply:reply]];
+		[NSException raise:kAMQPLoginException format:@"Failed to login to server as user %@ on vhost %@ using password %@: %@", username, vhost, password, [AMQPErrorDecoder errorDescriptionForReply:reply]];
 	}
 }
 
@@ -112,7 +113,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     amqp_rpc_reply_t reply = amqp_connection_close(_internalConnection, AMQP_REPLY_SUCCESS);
 
 	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
-		[NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: %@", [self errorDescriptionForReply:reply]];
+		[NSException raise:kAMQPConnectionException format:@"Unable to disconnect from host: %@", [AMQPErrorDecoder errorDescriptionForReply:reply]];
 	}
 
     _socket = NULL;
@@ -123,7 +124,7 @@ NSString *const kAMQPOperationException     = @"AMQPException";
 	amqp_rpc_reply_t reply = amqp_get_rpc_reply(_internalConnection);
 	
 	if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
-		[NSException raise:kAMQPOperationException format:@"%@: %@", context, [self errorDescriptionForReply:reply]];
+		[NSException raise:kAMQPOperationException format:@"%@: %@", context, [AMQPErrorDecoder errorDescriptionForReply:reply]];
 	}
 }
 

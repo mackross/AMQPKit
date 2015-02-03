@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 EF Education First. All rights reserved.
 //
 
+#import "AMQP+Private.h"
 #import "AMQPExchange+Additions.h"
 
 #import "AMQPChannel.h"
@@ -74,7 +75,7 @@
     };
     
     amqp_bytes_t amqp_bytes = amqp_bytes_malloc(body.length);
-    [body getBytes:amqp_bytes.bytes];
+    [body getBytes:amqp_bytes.bytes length:body.length];
     
 	amqp_basic_publish(self.channel.connection.internalConnection,
                        self.channel.internalChannel,
@@ -114,7 +115,7 @@
     }
     
     amqp_bytes_t amqp_body = amqp_bytes_malloc(body.length);
-    [body getBytes:amqp_body.bytes];
+    [body getBytes:amqp_body.bytes length:body.length];
     
     amqp_basic_publish(self.channel.connection.internalConnection,
                        self.channel.internalChannel,

@@ -17,12 +17,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "AMQPChannel.h"
+#import "AMQP+Private.h"
 #import "AMQPConnection.h"
 
 @interface AMQPChannel ()
 
-@property (assign, readwrite) amqp_channel_t internalChannel;
 @property (strong, readwrite) AMQPConnection *connection;
 
 @end

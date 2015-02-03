@@ -1,5 +1,5 @@
 //
-//  AMQPWrapper.h
+//  AMQPUtils.h
 //  Objective-C wrapper for librabbitmq-c
 //
 //  Copyright 2009 Max Wolter. All rights reserved.
@@ -7,7 +7,7 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//
+// 
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,10 +17,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "AMQPConnection.h"
-#import "AMQPChannel.h"
-#import "AMQPQueue.h"
-#import "AMQPExchange.h"
-#import "AMQPConsumer.h"
-#import "AMQPConsumerThread.h"
-#import "AMQPMessage.h"
+#import <Foundation/Foundation.h>
+
+#import <amqp.h>
+
+@interface AMQPErrorDecoder : NSObject
+
++ (NSString *)errorDescriptionForReply:(amqp_rpc_reply_t)reply;
+
+@end

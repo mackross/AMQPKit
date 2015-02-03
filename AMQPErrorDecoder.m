@@ -17,13 +17,13 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "AMQPObject.h"
+#import "AMQPErrorDecoder.h"
 
 #import <stdio.h>
 
-@implementation AMQPObject
+@implementation AMQPErrorDecoder
 
-- (NSString *)errorDescriptionForReply:(amqp_rpc_reply_t)reply
++ (NSString *)errorDescriptionForReply:(amqp_rpc_reply_t)reply
 {
 	switch (reply.reply_type) {
 		case AMQP_RESPONSE_NORMAL: {
