@@ -6,6 +6,10 @@
 //  Copyright (c) 2014 EF Education First. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
+#if TARGET_IPHONE_SIMULATOR
+
 #include <sys/uio.h>
 #include <sys/socket.h>
 
@@ -53,3 +57,5 @@ ssize_t writev$UNIX2003(int fildes, const struct iovec *iov, int iovcnt)
 {
     return writev(fildes, iov, iovcnt);
 }
+
+#endif

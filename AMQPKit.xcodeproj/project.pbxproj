@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		18F6B11C1A81641600B5A6E4 /* AMQP+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F6B11A1A81641600B5A6E4 /* AMQP+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18F6B11D1A81641600B5A6E4 /* AMQP+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F6B11B1A81641600B5A6E4 /* AMQP+Private.m */; };
+		18F6B11E1A816B8900B5A6E4 /* iOS-Simulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD8ECB1A8158E9006F1036 /* iOS-Simulator.m */; };
 		18FD8E9E1A81585F006F1036 /* AMQPKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8E9D1A81585F006F1036 /* AMQPKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18FD8EA41A81585F006F1036 /* AMQPKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FD8E981A81585F006F1036 /* AMQPKit.framework */; };
 		18FD8EAB1A81585F006F1036 /* AMQPTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD8EAA1A81585F006F1036 /* AMQPTests.m */; };
@@ -41,7 +42,7 @@
 		18FD8F051A816091006F1036 /* amqp_ssl_socket.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EFD1A816091006F1036 /* amqp_ssl_socket.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18FD8F061A816091006F1036 /* amqp_tcp_socket.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EFE1A816091006F1036 /* amqp_tcp_socket.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18FD8F071A816091006F1036 /* amqp_timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EFF1A816091006F1036 /* amqp_timer.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18FD8F081A816091006F1036 /* amqp.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8F001A816091006F1036 /* amqp.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		18FD8F081A816091006F1036 /* amqp.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8F001A816091006F1036 /* amqp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,6 +348,7 @@
 				18FD8EDD1A8158E9006F1036 /* AMQPConsumerThread.m in Sources */,
 				18FD8EE81A8158E9006F1036 /* AMQPQueue.m in Sources */,
 				18FD8EF61A815B29006F1036 /* AMQPErrorDecoder.m in Sources */,
+				18F6B11E1A816B8900B5A6E4 /* iOS-Simulator.m in Sources */,
 				18FD8ED71A8158E9006F1036 /* AMQPChannel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
