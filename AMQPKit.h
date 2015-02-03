@@ -25,4 +25,4 @@ FOUNDATION_EXPORT const unsigned char AMQPVersionString[];
 #import <AMQP/AMQPMessage.h>
 #import <AMQP/AMQPQueue.h>
 #import <AMQP/AMQPTTLManager.h>
-
+#import <AMQP/amqp.h>
