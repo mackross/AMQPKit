@@ -16,6 +16,7 @@
 
 @interface AMQPChannel ()
 @property (assign, readwrite) amqp_channel_t internalChannel;
+- (void)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection;
 @end
 
 @interface AMQPConnection ()
