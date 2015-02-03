@@ -16,13 +16,13 @@ FOUNDATION_EXPORT const unsigned char AMQPVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <AMQP/PublicHeader.h>
 
-#import <AMQP/AMQPChannel.h>
-#import <AMQP/AMQPConnection.h>
-#import <AMQP/AMQPConsumer.h>
-#import <AMQP/AMQPConsumerThread.h>
-#import <AMQP/AMQPExchange.h>
-#import <AMQP/AMQPExchange+Additions.h>
-#import <AMQP/AMQPMessage.h>
-#import <AMQP/AMQPQueue.h>
-#import <AMQP/AMQPTTLManager.h>
-#import <AMQP/amqp.h>
+#import <AMQPKit/AMQPChannel.h>
+#import <AMQPKit/AMQPConnection.h>
+#import <AMQPKit/AMQPConsumer.h>
+#import <AMQPKit/AMQPConsumerThread.h>
+#import <AMQPKit/AMQPExchange.h>
+#import <AMQPKit/AMQPExchange+Additions.h>
+#import <AMQPKit/AMQPMessage.h>
+#import <AMQPKit/AMQPQueue.h>
+#import <AMQPKit/AMQPTTLManager.h>
+#import <AMQPKit/amqp.h>

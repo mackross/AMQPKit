@@ -19,7 +19,7 @@
 
 #include <sys/ioctl.h>
 
-#import <amqp.h>
+#import "amqp.h"
 #import "AMQP+Private.h"
 #import "AMQPQueue.h"
 #import "AMQPConnection.h"

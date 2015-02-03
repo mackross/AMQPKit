@@ -18,7 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <amqp.h>
+#import "amqp.h"
 
 
 @class AMQPChannel;
