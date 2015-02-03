@@ -22,7 +22,7 @@
     
     @try {
         AMQPConnection *connection = [[AMQPConnection alloc] init];
-        [connection connectToHost:@"127.0.0.1" onPort:5672];
+        [connection connectToHost:@"dkr" onPort:5672];
         [connection loginAsUser:@"guest" withPassword:@"guest" onVHost:@"/"];
         AMQPChannel *channel = [connection openChannel];
         [channel close];

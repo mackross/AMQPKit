@@ -1,5 +1,5 @@
 PODS:
-  - librabbitmq-objc (0.7.1ctx)
+  - librabbitmq-objc (0.7.2ctx)
 
 DEPENDENCIES:
   - librabbitmq-objc (from `../`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  librabbitmq-objc: f33ac101ecc3eea8798e69e3c8e7a2704f927e79
+  librabbitmq-objc: 23fd0104e95b87e62e316e1a9945323f10eeca18
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.35.0

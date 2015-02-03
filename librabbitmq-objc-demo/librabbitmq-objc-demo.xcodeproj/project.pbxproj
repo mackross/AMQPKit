@@ -20,7 +20,8 @@
 
 /* Begin PBXFileReference section */
 		13D6812BD91B49AB88E92B48 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		851D089F4D564CF69E1D56F0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		45CB55EFFAE64640EE290CAE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		A755BDA4D89E7885F0600ED3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D3CD115A188428CB002E9316 /* librabbitmq-objc-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "librabbitmq-objc-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3CD115D188428CB002E9316 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D3CD115F188428CB002E9316 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -56,6 +57,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		38F0E309214D0BEA06B9F370 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A755BDA4D89E7885F0600ED3 /* Pods.debug.xcconfig */,
+				45CB55EFFAE64640EE290CAE /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		D3CD1151188428CB002E9316 = {
 			isa = PBXGroup;
 			children = (
@@ -63,7 +73,7 @@
 				D3CD117C188428CB002E9316 /* librabbitmq-objc-demoTests */,
 				D3CD115C188428CB002E9316 /* Frameworks */,
 				D3CD115B188428CB002E9316 /* Products */,
-				851D089F4D564CF69E1D56F0 /* Pods.xcconfig */,
+				38F0E309214D0BEA06B9F370 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -158,7 +168,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CTX;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "EF Education First";
 			};
 			buildConfigurationList = D3CD1155188428CB002E9316 /* Build configuration list for PBXProject "librabbitmq-objc-demo" */;
@@ -203,7 +213,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8A3A6AA3252847B4B745757A /* Check Pods Manifest.lock */ = {
@@ -259,7 +269,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -308,7 +317,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -349,9 +357,8 @@
 		};
 		D3CD1187188428CB002E9316 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 851D089F4D564CF69E1D56F0 /* Pods.xcconfig */;
+			baseConfigurationReference = A755BDA4D89E7885F0600ED3 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -370,9 +377,8 @@
 		};
 		D3CD1188188428CB002E9316 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 851D089F4D564CF69E1D56F0 /* Pods.xcconfig */;
+			baseConfigurationReference = 45CB55EFFAE64640EE290CAE /* Pods.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
