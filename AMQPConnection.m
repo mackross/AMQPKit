@@ -21,6 +21,7 @@
 #import "amqp_tcp_socket.h"
 #import "amqp_socket.h"
 
+#import "AMQP+Private.h"
 #import "AMQPConnection.h"
 #import "AMQPErrorDecoder.h"
 
