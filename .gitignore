@@ -18,3 +18,4 @@ profile
 # CocosPods
 librabbitmq-objc-demo/Pods/
 Carthage/Build
+Carthage/Checkouts
