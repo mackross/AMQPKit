@@ -11,7 +11,7 @@
 		18C0A9C01A841D8A0009D5E0 /* amqp_connection.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9A91A841D8A0009D5E0 /* amqp_connection.c */; };
 		18C0A9C11A841D8A0009D5E0 /* amqp_consumer.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9AA1A841D8A0009D5E0 /* amqp_consumer.c */; };
 		18C0A9C31A841D8A0009D5E0 /* amqp_framing.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9AC1A841D8A0009D5E0 /* amqp_framing.c */; };
-		18C0A9C41A841D8A0009D5E0 /* amqp_framing.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C0A9AD1A841D8A0009D5E0 /* amqp_framing.h */; };
+		18C0A9C41A841D8A0009D5E0 /* amqp_framing.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C0A9AD1A841D8A0009D5E0 /* amqp_framing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18C0A9C61A841D8A0009D5E0 /* amqp_hostcheck.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9AF1A841D8A0009D5E0 /* amqp_hostcheck.c */; };
 		18C0A9C71A841D8A0009D5E0 /* amqp_hostcheck.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C0A9B01A841D8A0009D5E0 /* amqp_hostcheck.h */; };
 		18C0A9C81A841D8A0009D5E0 /* amqp_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9B11A841D8A0009D5E0 /* amqp_mem.c */; };
@@ -24,7 +24,9 @@
 		18C0A9D21A841D8A0009D5E0 /* amqp_timer.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9BB1A841D8A0009D5E0 /* amqp_timer.c */; };
 		18C0A9D31A841D8A0009D5E0 /* amqp_timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C0A9BC1A841D8A0009D5E0 /* amqp_timer.h */; };
 		18C0A9D41A841D8A0009D5E0 /* amqp_url.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9BD1A841D8A0009D5E0 /* amqp_url.c */; };
-		18C0A9D51A841D8A0009D5E0 /* amqp.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C0A9BE1A841D8A0009D5E0 /* amqp.h */; };
+		18C0A9D51A841D8A0009D5E0 /* amqp.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C0A9BE1A841D8A0009D5E0 /* amqp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		18C0A9D71A8420520009D5E0 /* BaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9D61A8420520009D5E0 /* BaseTest.m */; };
+		18C0A9DC1A8427E30009D5E0 /* amqp_cfstream_socket.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9D81A84220D0009D5E0 /* amqp_cfstream_socket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18F3C02F1A81E4E300692297 /* Test.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F3C02D1A81E4E300692297 /* Test.h */; };
 		18F3C0301A81E4E300692297 /* Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F3C02E1A81E4E300692297 /* Test.m */; };
 		18F3C0321A81E53400692297 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F3C0311A81E53400692297 /* CocoaLumberjack.framework */; };
@@ -83,6 +85,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		187838491A967DF300E73701 /* amqp_cfstream_socket_objc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amqp_cfstream_socket_objc.h; sourceTree = "<group>"; };
 		18C0A9A81A841D8A0009D5E0 /* amqp_api.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = amqp_api.c; sourceTree = "<group>"; };
 		18C0A9A91A841D8A0009D5E0 /* amqp_connection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = amqp_connection.c; sourceTree = "<group>"; };
 		18C0A9AA1A841D8A0009D5E0 /* amqp_consumer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = amqp_consumer.c; sourceTree = "<group>"; };
@@ -101,6 +104,9 @@
 		18C0A9BC1A841D8A0009D5E0 /* amqp_timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_timer.h; sourceTree = "<group>"; };
 		18C0A9BD1A841D8A0009D5E0 /* amqp_url.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = amqp_url.c; sourceTree = "<group>"; };
 		18C0A9BE1A841D8A0009D5E0 /* amqp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp.h; sourceTree = "<group>"; };
+		18C0A9D61A8420520009D5E0 /* BaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTest.m; sourceTree = "<group>"; };
+		18C0A9D81A84220D0009D5E0 /* amqp_cfstream_socket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = amqp_cfstream_socket.m; sourceTree = "<group>"; };
+		18C0A9D91A84220D0009D5E0 /* amqp_cfstream_socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amqp_cfstream_socket.h; sourceTree = "<group>"; };
 		18F3C02D1A81E4E300692297 /* Test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test.h; sourceTree = "<group>"; };
 		18F3C02E1A81E4E300692297 /* Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Test.m; sourceTree = "<group>"; };
 		18F3C0311A81E53400692297 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
@@ -161,26 +167,37 @@
 			isa = PBXGroup;
 			children = (
 				18C0A9BE1A841D8A0009D5E0 /* amqp.h */,
-				18C0A9BA1A841D8A0009D5E0 /* amqp_tcp_socket.h */,
-				18C0A9B61A841D8A0009D5E0 /* amqp_socket.h */,
 				18C0A9BC1A841D8A0009D5E0 /* amqp_timer.h */,
 				18C0A9AD1A841D8A0009D5E0 /* amqp_framing.h */,
 				18C0A9B41A841D8A0009D5E0 /* amqp_private.h */,
 				18C0A9B01A841D8A0009D5E0 /* amqp_hostcheck.h */,
+				18C0A9DB1A8422F70009D5E0 /* sockets */,
 				18C0A9A81A841D8A0009D5E0 /* amqp_api.c */,
 				18C0A9A91A841D8A0009D5E0 /* amqp_connection.c */,
 				18C0A9AA1A841D8A0009D5E0 /* amqp_consumer.c */,
 				18C0A9AC1A841D8A0009D5E0 /* amqp_framing.c */,
 				18C0A9AF1A841D8A0009D5E0 /* amqp_hostcheck.c */,
 				18C0A9B11A841D8A0009D5E0 /* amqp_mem.c */,
-				18C0A9B51A841D8A0009D5E0 /* amqp_socket.c */,
 				18C0A9B81A841D8A0009D5E0 /* amqp_table.c */,
-				18C0A9B91A841D8A0009D5E0 /* amqp_tcp_socket.c */,
 				18C0A9BB1A841D8A0009D5E0 /* amqp_timer.c */,
 				18C0A9BD1A841D8A0009D5E0 /* amqp_url.c */,
 			);
 			name = "rabbitmq-c";
 			path = "ios-rabbitmq-c/rabbitmq-c/librabbitmq";
+			sourceTree = "<group>";
+		};
+		18C0A9DB1A8422F70009D5E0 /* sockets */ = {
+			isa = PBXGroup;
+			children = (
+				18C0A9B61A841D8A0009D5E0 /* amqp_socket.h */,
+				18C0A9B51A841D8A0009D5E0 /* amqp_socket.c */,
+				18C0A9BA1A841D8A0009D5E0 /* amqp_tcp_socket.h */,
+				18C0A9B91A841D8A0009D5E0 /* amqp_tcp_socket.c */,
+				187838491A967DF300E73701 /* amqp_cfstream_socket_objc.h */,
+				18C0A9D91A84220D0009D5E0 /* amqp_cfstream_socket.h */,
+				18C0A9D81A84220D0009D5E0 /* amqp_cfstream_socket.m */,
+			);
+			name = sockets;
 			sourceTree = "<group>";
 		};
 		18FD8E8E1A81585F006F1036 = {
@@ -250,6 +267,7 @@
 		18FD8EA71A81585F006F1036 /* AMQPTests */ = {
 			isa = PBXGroup;
 			children = (
+				18C0A9D61A8420520009D5E0 /* BaseTest.m */,
 				18FD8EAA1A81585F006F1036 /* AMQPTests.m */,
 				18FD8EA81A81585F006F1036 /* Supporting Files */,
 			);
@@ -412,6 +430,7 @@
 				18F6B11D1A81641600B5A6E4 /* AMQP+Private.m in Sources */,
 				18FD8EE21A8158E9006F1036 /* AMQPExchange+Additions.m in Sources */,
 				18FD8EDD1A8158E9006F1036 /* AMQPConsumerThread.m in Sources */,
+				18C0A9DC1A8427E30009D5E0 /* amqp_cfstream_socket.m in Sources */,
 				18C0A9C11A841D8A0009D5E0 /* amqp_consumer.c in Sources */,
 				18FD8EE81A8158E9006F1036 /* AMQPQueue.m in Sources */,
 				18FD8EF61A815B29006F1036 /* AMQPErrorDecoder.m in Sources */,
@@ -431,6 +450,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C0A9D71A8420520009D5E0 /* BaseTest.m in Sources */,
 				18FD8EAB1A81585F006F1036 /* AMQPTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,11 +490,7 @@
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					HAVE_HTONLL,
-					"AMQ_PLATFORM=\\\"iphone\\\"",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -515,11 +531,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					HAVE_HTONLL,
-					"AMQ_PLATFORM=\\\"iphone\\\"",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -545,6 +557,12 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"AMQ_PLATFORM=\\\"iphone\\\"",
+					AMQP_CFSTREAM_SOCKET,
+					HAVE_HTONLL,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -568,6 +586,12 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"AMQ_PLATFORM=\\\"iphone\\\"",
+					AMQP_CFSTREAM_SOCKET,
+					HAVE_HTONLL,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

@@ -30,6 +30,7 @@ extern NSString *const kAMQPOperationException;
 
 
 - (void)connectToHost:(NSString *)host onPort:(int)port;
+- (void)connectToHost:(NSString *)host onPort:(int)port SSL:(BOOL)SSL;
 - (void)loginAsUser:(NSString *)username withPassword:(NSString *)password onVHost:(NSString *)vhost;
 - (void)disconnect; // all channels have to be closed before closing the connection
 

@@ -18,6 +18,7 @@
 //
 
 #import "amqp.h"
+#import "amqp_cfstream_socket_objc.h"
 #import "amqp_tcp_socket.h"
 #import "amqp_socket.h"
 
@@ -66,8 +67,11 @@ NSString *const kAMQPOperationException     = @"AMQPException";
         amqp_destroy_connection(_internalConnection);
     }
 }
+- (void)connectToHost:(NSString *)host onPort:(int)port {
+    [self connectToHost:host onPort:port SSL:NO];
+}
 
-- (void)connectToHost:(NSString *)host onPort:(int)port
+- (void)connectToHost:(NSString *)host onPort:(int)port SSL:(BOOL)SSL
 {
     const __darwin_time_t kSocketOpenTimeout = 30;
 
@@ -78,7 +82,19 @@ NSString *const kAMQPOperationException     = @"AMQPException";
     timeout->tv_sec = kSocketOpenTimeout;
     timeout->tv_usec = 0;
 
-    _socket = amqp_tcp_socket_new(_internalConnection);
+    _socket = amqp_cfstream_socket_new(_internalConnection, ^(CFWriteStreamRef w, CFReadStreamRef r){
+        
+        if (SSL) {
+            NSDictionary *settings = @{
+                (id)kCFStreamSSLLevel: (id)kCFStreamSocketSecurityLevelNegotiatedSSL
+        };
+            
+            CFReadStreamSetProperty(r, kCFStreamPropertySSLSettings, (CFDictionaryRef)settings);
+            CFWriteStreamSetProperty(w, kCFStreamPropertySSLSettings, (CFDictionaryRef)settings);
+        }
+        
+    });
+//    _socket = amqp_tcp_socket_new(_internalConnection);
     if (!_socket) {
         _socket = NULL;
 		[NSException raise:kAMQPConnectionException format:@"Unable to create a TCP socket"];

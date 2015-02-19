@@ -55,7 +55,10 @@
 - (void)close
 {
     if (0 != _internalChannel) {
-        amqp_channel_close(_connection.internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
+        amqp_rpc_reply_t reply = amqp_channel_close(_connection.internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
+        if (reply.reply_type == AMQP_RESPONSE_NORMAL) {
+            _internalChannel = 0;
+        }
     }
 }
 
