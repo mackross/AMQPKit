@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1894A8791A96AED500D1EC5B /* AMQPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1894A8771A96AED500D1EC5B /* AMQPConnection.h */; };
+		1894A87A1A96AED500D1EC5B /* AMQPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1894A8781A96AED500D1EC5B /* AMQPConnection.m */; };
+		1894A87C1A96B3CB00D1EC5B /* AMQPConnection+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1894A87B1A96B3CB00D1EC5B /* AMQPConnection+Private.h */; };
 		18C0A9BF1A841D8A0009D5E0 /* amqp_api.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9A81A841D8A0009D5E0 /* amqp_api.c */; };
 		18C0A9C01A841D8A0009D5E0 /* amqp_connection.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9A91A841D8A0009D5E0 /* amqp_connection.c */; };
 		18C0A9C11A841D8A0009D5E0 /* amqp_consumer.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C0A9AA1A841D8A0009D5E0 /* amqp_consumer.c */; };
@@ -40,8 +43,8 @@
 		18FD8EAB1A81585F006F1036 /* AMQPTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD8EAA1A81585F006F1036 /* AMQPTests.m */; };
 		18FD8ED61A8158E9006F1036 /* AMQPChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EB41A8158E9006F1036 /* AMQPChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18FD8ED71A8158E9006F1036 /* AMQPChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD8EB51A8158E9006F1036 /* AMQPChannel.m */; };
-		18FD8ED81A8158E9006F1036 /* AMQPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EB61A8158E9006F1036 /* AMQPConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18FD8ED91A8158E9006F1036 /* AMQPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD8EB71A8158E9006F1036 /* AMQPConnection.m */; };
+		18FD8ED81A8158E9006F1036 /* LAMQPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EB61A8158E9006F1036 /* LAMQPConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		18FD8ED91A8158E9006F1036 /* LAMQPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD8EB71A8158E9006F1036 /* LAMQPConnection.m */; };
 		18FD8EDA1A8158E9006F1036 /* AMQPConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EB81A8158E9006F1036 /* AMQPConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18FD8EDB1A8158E9006F1036 /* AMQPConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD8EB91A8158E9006F1036 /* AMQPConsumer.m */; };
 		18FD8EDC1A8158E9006F1036 /* AMQPConsumerThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FD8EBA1A8158E9006F1036 /* AMQPConsumerThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -86,6 +89,9 @@
 
 /* Begin PBXFileReference section */
 		187838491A967DF300E73701 /* amqp_cfstream_socket_objc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amqp_cfstream_socket_objc.h; sourceTree = "<group>"; };
+		1894A8771A96AED500D1EC5B /* AMQPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConnection.h; sourceTree = "<group>"; };
+		1894A8781A96AED500D1EC5B /* AMQPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQPConnection.m; sourceTree = "<group>"; };
+		1894A87B1A96B3CB00D1EC5B /* AMQPConnection+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AMQPConnection+Private.h"; sourceTree = "<group>"; };
 		18C0A9A81A841D8A0009D5E0 /* amqp_api.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = amqp_api.c; sourceTree = "<group>"; };
 		18C0A9A91A841D8A0009D5E0 /* amqp_connection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = amqp_connection.c; sourceTree = "<group>"; };
 		18C0A9AA1A841D8A0009D5E0 /* amqp_consumer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = amqp_consumer.c; sourceTree = "<group>"; };
@@ -120,8 +126,8 @@
 		18FD8EAA1A81585F006F1036 /* AMQPTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AMQPTests.m; sourceTree = "<group>"; };
 		18FD8EB41A8158E9006F1036 /* AMQPChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPChannel.h; sourceTree = "<group>"; };
 		18FD8EB51A8158E9006F1036 /* AMQPChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQPChannel.m; sourceTree = "<group>"; };
-		18FD8EB61A8158E9006F1036 /* AMQPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConnection.h; sourceTree = "<group>"; };
-		18FD8EB71A8158E9006F1036 /* AMQPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQPConnection.m; sourceTree = "<group>"; };
+		18FD8EB61A8158E9006F1036 /* LAMQPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAMQPConnection.h; sourceTree = "<group>"; };
+		18FD8EB71A8158E9006F1036 /* LAMQPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAMQPConnection.m; sourceTree = "<group>"; };
 		18FD8EB81A8158E9006F1036 /* AMQPConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConsumer.h; sourceTree = "<group>"; };
 		18FD8EB91A8158E9006F1036 /* AMQPConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQPConsumer.m; sourceTree = "<group>"; };
 		18FD8EBA1A8158E9006F1036 /* AMQPConsumerThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConsumerThread.h; sourceTree = "<group>"; };
@@ -224,12 +230,15 @@
 				18C0A9A71A841D7D0009D5E0 /* rabbitmq-c */,
 				18F3C0311A81E53400692297 /* CocoaLumberjack.framework */,
 				18FD8E9D1A81585F006F1036 /* AMQPKit.h */,
+				1894A8771A96AED500D1EC5B /* AMQPConnection.h */,
+				1894A87B1A96B3CB00D1EC5B /* AMQPConnection+Private.h */,
+				1894A8781A96AED500D1EC5B /* AMQPConnection.m */,
 				18F6B11A1A81641600B5A6E4 /* AMQP+Private.h */,
 				18F6B11B1A81641600B5A6E4 /* AMQP+Private.m */,
 				18FD8EB41A8158E9006F1036 /* AMQPChannel.h */,
 				18FD8EB51A8158E9006F1036 /* AMQPChannel.m */,
-				18FD8EB61A8158E9006F1036 /* AMQPConnection.h */,
-				18FD8EB71A8158E9006F1036 /* AMQPConnection.m */,
+				18FD8EB61A8158E9006F1036 /* LAMQPConnection.h */,
+				18FD8EB71A8158E9006F1036 /* LAMQPConnection.m */,
 				18F3C02D1A81E4E300692297 /* Test.h */,
 				18F3C02E1A81E4E300692297 /* Test.m */,
 				18FD8EB81A8158E9006F1036 /* AMQPConsumer.h */,
@@ -298,8 +307,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				18FD8E9E1A81585F006F1036 /* AMQPKit.h in Headers */,
+				1894A8791A96AED500D1EC5B /* AMQPConnection.h in Headers */,
 				18FD8EE71A8158E9006F1036 /* AMQPQueue.h in Headers */,
 				18FD8ED61A8158E9006F1036 /* AMQPChannel.h in Headers */,
+				1894A87C1A96B3CB00D1EC5B /* AMQPConnection+Private.h in Headers */,
 				18C0A9C41A841D8A0009D5E0 /* amqp_framing.h in Headers */,
 				18FD8EE11A8158E9006F1036 /* AMQPExchange+Additions.h in Headers */,
 				18C0A9D31A841D8A0009D5E0 /* amqp_timer.h in Headers */,
@@ -309,7 +320,7 @@
 				18C0A9CB1A841D8A0009D5E0 /* amqp_private.h in Headers */,
 				18FD8EE51A8158E9006F1036 /* AMQPErrorDecoder.h in Headers */,
 				18C0A9D51A841D8A0009D5E0 /* amqp.h in Headers */,
-				18FD8ED81A8158E9006F1036 /* AMQPConnection.h in Headers */,
+				18FD8ED81A8158E9006F1036 /* LAMQPConnection.h in Headers */,
 				18FD8EDE1A8158E9006F1036 /* AMQPConsumerThreadDelegate.h in Headers */,
 				18C0A9CD1A841D8A0009D5E0 /* amqp_socket.h in Headers */,
 				18C0A9D11A841D8A0009D5E0 /* amqp_tcp_socket.h in Headers */,
@@ -418,12 +429,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1894A87A1A96AED500D1EC5B /* AMQPConnection.m in Sources */,
 				18F3C0301A81E4E300692297 /* Test.m in Sources */,
 				18C0A9D01A841D8A0009D5E0 /* amqp_tcp_socket.c in Sources */,
 				18FD8EE41A8158E9006F1036 /* AMQPMessage.m in Sources */,
 				18FD8EDB1A8158E9006F1036 /* AMQPConsumer.m in Sources */,
 				18C0A9BF1A841D8A0009D5E0 /* amqp_api.c in Sources */,
-				18FD8ED91A8158E9006F1036 /* AMQPConnection.m in Sources */,
+				18FD8ED91A8158E9006F1036 /* LAMQPConnection.m in Sources */,
 				18FD8EEA1A8158E9006F1036 /* AMQPTTLManager.m in Sources */,
 				18FD8EE01A8158E9006F1036 /* AMQPExchange.m in Sources */,
 				18C0A9C81A841D8A0009D5E0 /* amqp_mem.c in Sources */,

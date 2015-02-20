@@ -1,5 +1,5 @@
 //
-//  AMQPChannel.h
+//  AMQPConnection.h
 //  Objective-C wrapper for librabbitmq-c
 //
 //  Copyright 2009 Max Wolter. All rights reserved.
@@ -20,11 +20,23 @@
 #import <Foundation/Foundation.h>
 #import "amqp.h"
 
-@class LAMQPConnection;
+extern NSString *const kAMQPConnectionException;
+extern NSString *const kAMQPLoginException;
+extern NSString *const kAMQPOperationException;
 
-@interface AMQPChannel : NSObject
+@class AMQPChannel;
 
-@property (readonly) LAMQPConnection *connection;
-- (void)close;
+@interface LAMQPConnection : NSObject
+
+
+- (void)connectToHost:(NSString *)host onPort:(int)port;
+- (void)connectToHost:(NSString *)host onPort:(int)port SSL:(BOOL)SSL;
+- (void)loginAsUser:(NSString *)username withPassword:(NSString *)password onVHost:(NSString *)vhost;
+- (void)disconnect; // all channels have to be closed before closing the connection
+
+
+- (AMQPChannel *)openChannel;
+
+- (BOOL)check;
 
 @end

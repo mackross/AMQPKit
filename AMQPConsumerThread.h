@@ -21,7 +21,7 @@
 
 #import "AMQPConsumerThreadDelegate.h"
 
-@class AMQPConnection;
+@class LAMQPConnection;
 @class AMQPChannel;
 @class AMQPQueue;
 @class AMQPConsumer;

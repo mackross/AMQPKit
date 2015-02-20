@@ -18,14 +18,14 @@
 
 @implementation MQKitTests
 
-- (AMQPConnection *)connection
+- (LAMQPConnection *)connection
 {
     return [self unsecuredDockerConnection];
 }
 
 - (void)setUp {
     [super setUp];
-    AMQPConnection *connection = [self connection];
+    LAMQPConnection *connection = [self connection];
     AMQPChannel *channel = [connection openChannel];
     _exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
     _queue = [[AMQPQueue alloc] initWithName:@"" onChannel:channel isPassive:NO isExclusive:NO isDurable:NO getsAutoDeleted:YES];
@@ -35,17 +35,17 @@
     // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
-- (AMQPConnection *)unsecuredDockerConnection
+- (LAMQPConnection *)unsecuredDockerConnection
 {
-    AMQPConnection *connection = [[AMQPConnection alloc] init];
+    LAMQPConnection *connection = [[LAMQPConnection alloc] init];
     [connection connectToHost:@"192.168.59.103" onPort:5672];
     [connection loginAsUser:@"guest" withPassword:@"guest" onVHost:@"/"];
     return connection;
 }
 
-- (AMQPConnection *)secureRemoteConnection
+- (LAMQPConnection *)secureRemoteConnection
 {
-    AMQPConnection *connection = [[AMQPConnection alloc] init];
+    LAMQPConnection *connection = [[LAMQPConnection alloc] init];
     [connection connectToHost:@"<#host #>" onPort:<#5671#> SSL:<#YES#>];
     [connection loginAsUser:@"<#user#>" withPassword:@"<#password#>" onVHost:@"<#vhost#>"];
     return connection;
@@ -59,7 +59,7 @@
 }
 
 - (void)testExample {
-    AMQPConnection *connection = [self connection];
+    LAMQPConnection *connection = [self connection];
     AMQPChannel *channel = [connection openChannel];
     AMQPExchange *exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
     
@@ -75,7 +75,7 @@
 
 
 - (void)testBufferedMessage {
-    AMQPConnection *connection = [self connection];
+    LAMQPConnection *connection = [self connection];
     AMQPChannel *channel = [connection openChannel];
     AMQPExchange *exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
     

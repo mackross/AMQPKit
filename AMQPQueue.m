@@ -23,7 +23,7 @@
 #import "AMQPChannel.h"
 #import "AMQPExchange.h"
 #import "AMQPConsumer.h"
-#import "AMQPConnection.h"
+#import "LAMQPConnection.h"
 
 uint16_t amqp_queue_ttl = 60000;
 uint16_t amqp_queue_msg_ttl = 60000;

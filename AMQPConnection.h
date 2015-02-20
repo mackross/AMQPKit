@@ -1,42 +1,30 @@
 //
 //  AMQPConnection.h
-//  Objective-C wrapper for librabbitmq-c
+//  AMQPKit
 //
-//  Copyright 2009 Max Wolter. All rights reserved.
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  Created by Andrew Mackenzie-Ross on 19/02/2015.
+//  Copyright (c) 2015 librabbitmq. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "amqp.h"
-
-extern NSString *const kAMQPConnectionException;
-extern NSString *const kAMQPLoginException;
-extern NSString *const kAMQPOperationException;
-
-@class AMQPChannel;
 
 @interface AMQPConnection : NSObject
 
+- (instancetype)initWithHost:(NSString *)host port:(NSInteger)port SSL:(BOOL)SSL allowCellular:(BOOL)allowCellular;
 
-- (void)connectToHost:(NSString *)host onPort:(int)port;
-- (void)connectToHost:(NSString *)host onPort:(int)port SSL:(BOOL)SSL;
-- (void)loginAsUser:(NSString *)username withPassword:(NSString *)password onVHost:(NSString *)vhost;
-- (void)disconnect; // all channels have to be closed before closing the connection
+@property (nonatomic, readonly) NSString *host;
+@property (nonatomic, readonly) NSString *user;
+@property (nonatomic, readonly) NSInteger port;
+@property (nonatomic, readonly) BOOL SSL;
+@property (nonatomic, readonly) BOOL allowCellular;
+@property (nonatomic, readonly, getter=isCellular) BOOL cellular;
+
+/// Opens a socket connection using the instance's configuration variables
+/// and the credential arguments.
+- (void)connectWithUser:(NSString *)user password:(NSString *)password vhost:(NSString *)vhost completion:(void(^)(NSError *error))completionBlock;
+
+- (NSError *)connectWithUser:(NSString *)user password:(NSString *)password vhost:(NSString *)vhost;
 
 
-- (AMQPChannel *)openChannel;
-
-- (BOOL)check;
 
 @end

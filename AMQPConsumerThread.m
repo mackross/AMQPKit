@@ -22,7 +22,7 @@
 #import "amqp.h"
 #import "AMQP+Private.h"
 #import "AMQPQueue.h"
-#import "AMQPConnection.h"
+#import "LAMQPConnection.h"
 #import "AMQPChannel.h"
 #import "AMQPExchange+Additions.h"
 
@@ -50,7 +50,7 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
 @property (copy) NSString *exchangeKey;
 
 @property (strong) AMQPTTLManager *ttlManager;
-@property (strong) AMQPConnection *connection;
+@property (strong) LAMQPConnection *connection;
 @property (strong) AMQPChannel *channel;
 @property (strong) AMQPExchange *exchange;
 @property (strong) AMQPQueue *queue;
@@ -211,7 +211,7 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
     @try {
         NSLog(@"<consumer_thread (%p) topic: %@ :: connecting to host (%@:%d)...>", self, _topic, host, port);
 
-        _connection = [[AMQPConnection alloc] init];
+        _connection = [[LAMQPConnection alloc] init];
         [_connection connectToHost:host onPort:port];
         NSLog(@"<consumer_thread (%p) topic: %@ :: connected!>", self, _topic);
         

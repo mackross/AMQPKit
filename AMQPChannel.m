@@ -18,11 +18,11 @@
 //
 
 #import "AMQP+Private.h"
-#import "AMQPConnection.h"
+#import "LAMQPConnection.h"
 
 @interface AMQPChannel ()
 
-@property (strong, readwrite) AMQPConnection *connection;
+@property (strong, readwrite) LAMQPConnection *connection;
 
 @end
 
@@ -42,7 +42,7 @@
     [self close];
 }
 
-- (void)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection
+- (void)openChannel:(amqp_channel_t)channel onConnection:(LAMQPConnection *)connection
 {
 	_connection = connection;
 	_internalChannel = channel;

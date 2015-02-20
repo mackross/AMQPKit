@@ -21,7 +21,7 @@
 #import "AMQP+Private.h"
 
 #import "AMQPChannel.h"
-#import "AMQPConnection.h"
+#import "LAMQPConnection.h"
 
 //#import "config.h"
 

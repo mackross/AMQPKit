@@ -9,17 +9,17 @@
 #import <Foundation/Foundation.h>
 
 #import "AMQPChannel.h"
-#import "AMQPConnection.h"
+#import "LAMQPConnection.h"
 #import "AMQPConsumer.h"
 #import "AMQPQueue.h"
 #import "AMQPExchange.h"
 
 @interface AMQPChannel ()
 @property (assign, readwrite) amqp_channel_t internalChannel;
-- (void)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection;
+- (void)openChannel:(amqp_channel_t)channel onConnection:(LAMQPConnection *)connection;
 @end
 
-@interface AMQPConnection ()
+@interface LAMQPConnection ()
 @property (assign, readwrite) amqp_connection_state_t internalConnection;
 - (void)checkLastOperation:(NSString *)context;
 @end
