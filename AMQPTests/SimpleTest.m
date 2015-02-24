@@ -20,7 +20,7 @@
 
 - (AMQPConnection *)connection
 {
-    return [self secureRemoteConnection];
+    return [self unsecuredDockerConnection];
 }
 
 - (void)setUp {
@@ -40,19 +40,19 @@
                                 if (!error) {
                                     dispatch_semaphore_signal(sem);
                                 } else {
-                                    NSLog(@"queue can't be bound to exchange");
+                                    XCTFail(@"queue can't be bound to exchange");
                                 }
                             }];
                         } else {
-                            NSLog(@"queue can't be declared");
+                            XCTFail(@"queue can't be declared");
                         }
                     }];
                 } else {
-                    NSLog(@"exchange can't be declared.");
+                    XCTFail(@"exchange can't be declared.");
                 }
             }];
         } else {
-            NSLog(@"channel can't be opened");
+            XCTFail(@"channel can't be opened");
         }
     }];
     
@@ -83,7 +83,7 @@
     return connection;
 }
 
-- (LAMQPConnection *)secureRemoteConnection
+- (AMQPConnection *)secureRemoteConnection
 {
     AMQPConnection *connection = [[AMQPConnection alloc] initWithHost:@"<#host#>" port:5671 SSL:YES allowCellular:YES];
     
@@ -122,22 +122,22 @@
                         if (!error) {
                             [exp fulfill];
                         } else {
-                            NSLog(@"message can't be published.");
+                            XCTFail(@"message can't be published.");
                         }
                     }];
                 } else {
-                    NSLog(@"exchange can't be declared.");
+                    XCTFail(@"exchange can't be declared.");
                 }
             }];
         } else {
-            NSLog(@"channel can't be opened");
+            XCTFail(@"channel can't be opened");
         }
     }];
     
     [self waitForExpectationsWithTimeout:6.0 handler:nil];
     
     
-    [NSThread sleepForTimeInterval:0.25];
+    [NSThread sleepForTimeInterval:0.1];
     
     XCTestExpectation *exp2 = [self expectationWithDescription:@"message should be retrievable"];
     [_queue getMessageWithAutoAcknowledgement:YES completion:^(AMQPMessage *message, NSError *error) {
@@ -145,7 +145,7 @@
             XCTAssertEqualObjects(message.body, @"test-1");
             [exp2 fulfill];
         } else {
-            NSLog(@"cannot get message: %@",error);
+            XCTFail(@"cannot get message: %@",error);
         }
     }];
     
@@ -164,14 +164,11 @@
         AMQPConnection *connection = [self connection];
         
         [connection openChannel:^(AMQPChannel *channel, NSError *error) {
-            NSLog(@"channel opened %@",error);
             if (!error) {
                 AMQPExchange *exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
                 [exchange declare:^(NSError *error) {
-                    NSLog(@"exchange declared %@",error);
                     if (!error) {
                         [exchange publishMessage:[self twoHundredKB] usingRoutingKey:@"routing-test" completion:^(NSError *error) {
-                            NSLog(@"exchange published message %@",error);
                             [exp fulfill];
                             if (!error) {
                                 
@@ -192,7 +189,7 @@
     
     
     [self waitForExpectationsWithTimeout:20.0 handler:nil];
-    [NSThread sleepForTimeInterval:0.25];
+    [NSThread sleepForTimeInterval:0.1];
     
     XCTestExpectation *exp2 = [self expectationWithDescription:@"message should be retrievable"];
     [_queue getMessageWithAutoAcknowledgement:YES completion:^(AMQPMessage *message, NSError *error) {
