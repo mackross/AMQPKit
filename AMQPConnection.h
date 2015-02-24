@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class AMQPChannel;
+
 @interface AMQPConnection : NSObject
 
 - (instancetype)initWithHost:(NSString *)host port:(NSInteger)port SSL:(BOOL)SSL allowCellular:(BOOL)allowCellular;
@@ -21,10 +23,10 @@
 
 /// Opens a socket connection using the instance's configuration variables
 /// and the credential arguments.
-- (void)connectWithUser:(NSString *)user password:(NSString *)password vhost:(NSString *)vhost completion:(void(^)(NSError *error))completionBlock;
+- (void)connectWithUser:(NSString *)user password:(NSString *)password vhost:(NSString *)vhost queue:(dispatch_queue_t)queue completion:(void(^)(NSError *error))completionBlock;
 
-- (NSError *)connectWithUser:(NSString *)user password:(NSString *)password vhost:(NSString *)vhost;
+- (void)openChannel:(void(^)(AMQPChannel *channel, NSError *error))completionBlock;
 
-
+- (void)disconnect:(void(^)(NSError *))completionBlock;
 
 @end

@@ -31,16 +31,18 @@
 
 - (id)initWithBody:(amqp_bytes_t)theBody withDeliveryProperties:(amqp_basic_deliver_t *)theDeliveryProperties withMessageProperties:(amqp_basic_properties_t *)theMessageProperties receivedAt:(NSDate *)receiveTimestamp
 {
-	if (!theDeliveryProperties || !theMessageProperties) {
+	if (!theMessageProperties) {
         return nil;
     }
 	
     if ((self = [super init])) {
-		_consumerTag = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->consumer_tag);
-		_deliveryTag = theDeliveryProperties->delivery_tag;
-		_redelivered = theDeliveryProperties->redelivered;
-		_exchangeName = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->exchange);
-		_routingKey = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->routing_key);
+        if (theDeliveryProperties) {
+            _consumerTag = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->consumer_tag);
+            _deliveryTag = theDeliveryProperties->delivery_tag;
+            _redelivered = theDeliveryProperties->redelivered;
+            _exchangeName = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->exchange);
+            _routingKey = AMQP_BYTES_TO_NSSTRING(theDeliveryProperties->routing_key);
+        }
 		
 		if (theMessageProperties->_flags & AMQP_BASIC_CONTENT_TYPE_FLAG) { _contentType = AMQP_BYTES_TO_NSSTRING(theMessageProperties->content_type); } else { _contentType = nil; }
 		if (theMessageProperties->_flags & AMQP_BASIC_CONTENT_ENCODING_FLAG) { _contentEncoding = AMQP_BYTES_TO_NSSTRING(theMessageProperties->content_encoding); } else { _contentEncoding = nil; }

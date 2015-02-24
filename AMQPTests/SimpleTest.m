@@ -18,78 +18,193 @@
 
 @implementation MQKitTests
 
-- (LAMQPConnection *)connection
+- (AMQPConnection *)connection
 {
-    return [self unsecuredDockerConnection];
+    return [self secureRemoteConnection];
 }
 
 - (void)setUp {
     [super setUp];
-    LAMQPConnection *connection = [self connection];
-    AMQPChannel *channel = [connection openChannel];
-    _exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
-    _queue = [[AMQPQueue alloc] initWithName:@"" onChannel:channel isPassive:NO isExclusive:NO isDurable:NO getsAutoDeleted:YES];
-    [_queue bindToExchange:_exchange withKey:@"*"];
-    _consumer = [[AMQPConsumer alloc] initForQueue:_queue onChannel:channel useAcknowledgements:NO isExclusive:NO receiveLocalMessages:YES];
+    AMQPConnection *connection = [self connection];
     
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+   dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    [connection openChannel:^(AMQPChannel *channel, NSError *error) {
+        if (!error) {
+            _exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
+            [_exchange declare:^(NSError *error) {
+                if (!error) {
+                    _queue = [[AMQPQueue alloc] initWithName:@"" onChannel:channel isPassive:NO isExclusive:NO isDurable:NO getsAutoDeleted:YES];
+                    [_queue declare:^(NSError *error) {
+                        if (!error) {
+                            [_queue bindToExchange:_exchange withKey:@"routing-test" completion:^(NSError *error) {
+                                if (!error) {
+                                    dispatch_semaphore_signal(sem);
+                                } else {
+                                    NSLog(@"queue can't be bound to exchange");
+                                }
+                            }];
+                        } else {
+                            NSLog(@"queue can't be declared");
+                        }
+                    }];
+                } else {
+                    NSLog(@"exchange can't be declared.");
+                }
+            }];
+        } else {
+            NSLog(@"channel can't be opened");
+        }
+    }];
+    
+    
+    if (!dispatch_semaphore_wait(sem, 10.0)) {
+        XCTFail(@"semaphore timeout");
+    }
 }
 
-- (LAMQPConnection *)unsecuredDockerConnection
+- (AMQPConnection *)unsecuredDockerConnection
 {
-    LAMQPConnection *connection = [[LAMQPConnection alloc] init];
-    [connection connectToHost:@"192.168.59.103" onPort:5672];
-    [connection loginAsUser:@"guest" withPassword:@"guest" onVHost:@"/"];
+    AMQPConnection *connection = [[AMQPConnection alloc] initWithHost:@"192.168.59.103" port:5672 SSL:NO allowCellular:YES];
+    
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
+    [connection connectWithUser:@"guest" password:@"guest" vhost:@"/" queue:dispatch_get_main_queue() completion:^(NSError *error){
+        if (!error) {
+            dispatch_semaphore_signal(sem);
+        } else {
+            XCTFail(@"error connecting: %@",error);
+        }
+    }];
+    
+    if(!dispatch_semaphore_wait(sem, 5.0)) {
+        XCTFail("semaphore timeout");
+    }
+    
     return connection;
 }
 
 - (LAMQPConnection *)secureRemoteConnection
 {
-    LAMQPConnection *connection = [[LAMQPConnection alloc] init];
-    [connection connectToHost:@"grey-dingo.rmq.cloudamqp.com" onPort:5672 SSL:NO];
-    [connection loginAsUser:@"xbjlfzyw" withPassword:@"6pbZsvch0CxwIGi1-bC8WXs570Gy_i6M" onVHost:@"xbjlfzyw"];
+    AMQPConnection *connection = [[AMQPConnection alloc] initWithHost:@"<#host#>" port:5671 SSL:YES allowCellular:YES];
+    
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
+    [connection connectWithUser:@"<#user#>" password:@"<#password#>" vhost:@"/" queue:dispatch_get_main_queue() completion:^(NSError *error){
+        if (!error) {
+            dispatch_semaphore_signal(sem);
+        } else {
+            XCTFail(@"error connecting: %@",error);
+        }
+    }];
+    
+    if(!dispatch_semaphore_wait(sem, 5.0)) {
+        XCTFail("semaphore timeout");
+    }
+    
     return connection;
 }
 
 - (void)tearDown {
-    [_exchange.channel close];
-    [_exchange.channel.connection disconnect];
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
 - (void)testExample {
-    LAMQPConnection *connection = [self connection];
-    AMQPChannel *channel = [connection openChannel];
-    AMQPExchange *exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
+    XCTestExpectation *exp = [self expectationWithDescription:@"message should be published"];
+    AMQPConnection *connection = [self connection];
     
-    NSLog(@"connected");
+    [connection openChannel:^(AMQPChannel *channel, NSError *error) {
+        if (!error) {
+            AMQPExchange *exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
+            [exchange declare:^(NSError *error) {
+                if (!error) {
+                    [exchange publishMessage:@"test-1" usingRoutingKey:@"routing-test" completion:^(NSError *error) {
+                        if (!error) {
+                            [exp fulfill];
+                        } else {
+                            NSLog(@"message can't be published.");
+                        }
+                    }];
+                } else {
+                    NSLog(@"exchange can't be declared.");
+                }
+            }];
+        } else {
+            NSLog(@"channel can't be opened");
+        }
+    }];
     
-    [exchange publishMessage:@"test-1" usingRoutingKey:@"routing-test"];
+    [self waitForExpectationsWithTimeout:6.0 handler:nil];
     
-    AMQPMessage *message = [self.consumer pop];
-    XCTAssertEqualObjects(message.body, @"test-1");
-    [channel close];
-    [connection disconnect];
+    
+    [NSThread sleepForTimeInterval:0.25];
+    
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"message should be retrievable"];
+    [_queue getMessageWithAutoAcknowledgement:YES completion:^(AMQPMessage *message, NSError *error) {
+        if (!error) {
+            XCTAssertEqualObjects(message.body, @"test-1");
+            [exp2 fulfill];
+        } else {
+            NSLog(@"cannot get message: %@",error);
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:3.0 handler:nil];
+//    AMQPMessage *message = [self.consumer pop];
+//    XCTAssertEqualObjects(message.body, @"test-1");
+//    [channel close];
+//    [connection disconnect];
 }
 
-
-- (void)testBufferedMessage {
-    LAMQPConnection *connection = [self connection];
-    AMQPChannel *channel = [connection openChannel];
-    AMQPExchange *exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
+- (void)testMessageLargerThanFrameSize
+{
     
-    NSLog(@"connected");
+    @autoreleasepool {
+        XCTestExpectation *exp = [self expectationWithDescription:@"message should be published"];
+        AMQPConnection *connection = [self connection];
+        
+        [connection openChannel:^(AMQPChannel *channel, NSError *error) {
+            NSLog(@"channel opened %@",error);
+            if (!error) {
+                AMQPExchange *exchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"test" onChannel:channel isPassive:NO isDurable:NO getsAutoDeleted:YES];
+                [exchange declare:^(NSError *error) {
+                    NSLog(@"exchange declared %@",error);
+                    if (!error) {
+                        [exchange publishMessage:[self twoHundredKB] usingRoutingKey:@"routing-test" completion:^(NSError *error) {
+                            NSLog(@"exchange published message %@",error);
+                            [exp fulfill];
+                            if (!error) {
+                                
+                            } else {
+                                XCTFail(@"message can't be published: %@", error);
+                            }
+                        }];
+                    } else {
+                        XCTFail(@"exchange can't be declared: %@", error);
+                    }
+                }];
+            } else {
+                XCTFail(@"channel can't be opened: %@", error);
+            }
+        }];
+    }
     
-    NSString *msg = [self twoHundredKB];
-    [exchange publishMessage:msg usingRoutingKey:@"routing-test"];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     
-    AMQPMessage *message = [self.consumer pop];
-    XCTAssertEqualObjects(message.body, msg);
-    [channel close];
-    [connection disconnect];
+    [self waitForExpectationsWithTimeout:20.0 handler:nil];
+    [NSThread sleepForTimeInterval:0.25];
+    
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"message should be retrievable"];
+    [_queue getMessageWithAutoAcknowledgement:YES completion:^(AMQPMessage *message, NSError *error) {
+        [exp2 fulfill];
+        if (!error) {
+            XCTAssertEqualObjects(message.body, [self twoHundredKB]);
+        } else {
+            XCTFail(@"cannot get message: %@",error);
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:20.0 handler:nil];
 }
 
 - (NSString *)twoHundredKB {

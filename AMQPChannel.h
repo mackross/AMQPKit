@@ -20,11 +20,11 @@
 #import <Foundation/Foundation.h>
 #import "amqp.h"
 
-@class LAMQPConnection;
+@class AMQPConnection;
 
 @interface AMQPChannel : NSObject
 
-@property (readonly) LAMQPConnection *connection;
+@property (readonly) AMQPConnection *connection;
 - (void)close;
 
 @end

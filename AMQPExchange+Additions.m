@@ -11,7 +11,7 @@
 
 #import "AMQPChannel.h"
 #import "AMQPQueue.h"
-#import "LAMQPConnection.h"
+#import "AMQPConnection+Private.h"
 
 @implementation AMQPExchange(Additions)
 

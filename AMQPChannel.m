@@ -18,11 +18,12 @@
 //
 
 #import "AMQP+Private.h"
-#import "LAMQPConnection.h"
+#import "AMQPError.h"
+#import "AMQPConnection+Private.h"
 
 @interface AMQPChannel ()
 
-@property (strong, readwrite) LAMQPConnection *connection;
+@property (strong, readwrite) AMQPConnection *connection;
 
 @end
 
@@ -42,20 +43,25 @@
     [self close];
 }
 
-- (void)openChannel:(amqp_channel_t)channel onConnection:(LAMQPConnection *)connection
+- (NSError *)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection
 {
-	_connection = connection;
+	_connection = (id)connection;
 	_internalChannel = channel;
 
-	amqp_channel_open(_connection.internalConnection, _internalChannel);
+	amqp_channel_open_ok_t *result = amqp_channel_open(((AMQPConnection *)_connection).internalConnection, _internalChannel);
+    if (!result) {
+        amqp_rpc_reply_t reply = amqp_get_rpc_reply(self.connection.internalConnection);
+        // TODO: fix error
+        return [AMQPError errorWithCode:AMQPErrorCodeServerError reply_t:reply];
+    }
 
-	[_connection checkLastOperation:@"Failed to open a channel"];
+    return nil;
 }
 
 - (void)close
 {
     if (0 != _internalChannel) {
-        amqp_rpc_reply_t reply = amqp_channel_close(_connection.internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
+        amqp_rpc_reply_t reply = amqp_channel_close(((AMQPConnection *)_connection).internalConnection, _internalChannel, AMQP_REPLY_SUCCESS);
         if (reply.reply_type == AMQP_RESPONSE_NORMAL) {
             _internalChannel = 0;
         }

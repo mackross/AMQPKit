@@ -19,6 +19,8 @@
 
 #import "AMQPExchange.h"
 #import "AMQP+Private.h"
+#import "AMQPError.h"
+#import "AMQPConnection+Private.h"
 
 #import "AMQPChannel.h"
 #import "LAMQPConnection.h"
@@ -31,11 +33,24 @@
 
 @interface AMQPExchange ()
 
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) BOOL isPassive;
+@property (nonatomic, readonly) BOOL isDurable;
+@property (nonatomic, readonly) BOOL autoDelete;
+@property (nonatomic, readonly) BOOL internal;
 @property (strong, readwrite) AMQPChannel *channel;
+@property (nonatomic, readwrite) AMQPConnection *connection;
+
+@property (nonatomic, readonly) NSString *type;
 
 @end
 
 @implementation AMQPExchange
+
+- (AMQPConnection *)connection
+{
+    return (id)self.channel.connection;
+}
 
 - (void)dealloc
 {
@@ -45,16 +60,40 @@
 - (id)initExchangeOfType:(NSString *)theType withName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
 {
     if ((self = [super init])) {
-        static const BOOL internal = NO;
-		amqp_exchange_declare(theChannel.connection.internalConnection, theChannel.internalChannel, amqp_cstring_bytes([theName UTF8String]), amqp_cstring_bytes([theType UTF8String]), passive, durable, autoDelete, internal, AMQP_EMPTY_TABLE);
+        _internal = NO;
+        _autoDelete = autoDelete;
+        _isDurable = durable;
+        _isPassive = passive;
+        _type = theType;
+        
 		
-		[theChannel.connection checkLastOperation:@"Failed to declare exchange"];
 		
 		_internalExchange = amqp_bytes_malloc_dup(amqp_cstring_bytes([theName UTF8String]));
 		_channel = theChannel;
 	}
 	
 	return self;
+}
+
+- (void)declare:(void (^)(NSError *))completionBlock
+{
+    [self.connection.networkThread scheduleBlock:^{
+        NSError *error = [self declare];
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (NSError *)declare
+{
+    amqp_exchange_declare_ok_t *result = amqp_exchange_declare(self.connection.internalConnection, self.channel.internalChannel, self.internalExchange, amqp_cstring_bytes([self.type UTF8String]), self.isPassive, self.isDurable, self.autoDelete, self.internal, AMQP_EMPTY_TABLE);
+    if (!result) {
+        amqp_rpc_reply_t reply = amqp_get_rpc_reply(self.connection.internalConnection);
+// TODO: fix error handling
+        [AMQPError errorWithCode:AMQPErrorCodeServerError reply_t:reply];
+    }
+    return nil;
 }
 
 - (id)initDirectExchangeWithName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete
@@ -72,11 +111,25 @@
 	return [self initExchangeOfType:AMQP_EXCHANGE_TYPE_TOPIC withName:theName onChannel:theChannel isPassive:passive isDurable:durable getsAutoDeleted:autoDelete];
 }
 
-- (void)publishMessage:(NSString *)body usingRoutingKey:(NSString *)theRoutingKey
+- (NSError *)publishMessage:(NSString *)body usingRoutingKey:(NSString *)theRoutingKey
 {
-	amqp_basic_publish(_channel.connection.internalConnection, _channel.internalChannel, _internalExchange, amqp_cstring_bytes([theRoutingKey UTF8String]), NO, NO, NULL, amqp_cstring_bytes([body UTF8String]));
+	int status = amqp_basic_publish(_channel.connection.internalConnection, _channel.internalChannel, _internalExchange, amqp_cstring_bytes([theRoutingKey UTF8String]), NO, NO, NULL, amqp_cstring_bytes([body UTF8String]));
+    if (status != AMQP_STATUS_OK) {
+        return [AMQPError errorWithCode:status format:@"Unable to publish method."];
+    }
+    
+    return nil;
 	
-	[_channel.connection checkLastOperation:@"Failed to publish message"];
+}
+
+- (void)publishMessage:(NSString *)body usingRoutingKey:(NSString *)theRoutingKey completion:(void (^)(NSError *))completionBlock
+{
+    [self.connection.networkThread scheduleBlock:^{
+        NSError *error = [self publishMessage:body usingRoutingKey:theRoutingKey];
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
 }
 
 @end

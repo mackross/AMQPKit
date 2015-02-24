@@ -23,6 +23,7 @@
 @class AMQPChannel;
 @class AMQPExchange;
 @class AMQPConsumer;
+@class AMQPMessage;
 
 @interface AMQPQueue : NSObject
 
@@ -30,10 +31,19 @@
 
 - (id)initWithName:(NSString *)theName onChannel:(AMQPChannel *)theChannel isPassive:(BOOL)passive isExclusive:(BOOL)exclusive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;
 
-- (void)bindToExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey;
-- (void)unbindFromExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey;
+- (void)bindToExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey completion:(void(^)(NSError *error))completionBlock;
+- (void)unbindFromExchange:(AMQPExchange *)theExchange withKey:(NSString *)bindingKey completion:(void(^)(NSError *error))completionBlock;
+- (void)deleteQueue:(void(^)(NSError *error))completionBlock;
 
-- (void)deleteQueue;
+- (void)declare:(void(^)(NSError *error))completionBlock;
+
+/// This is the Pull-API for messages and may return a nil message and nil error
+/// if no messages exists.
+- (void)getMessageWithAutoAcknowledgement:(BOOL)autoAck completion:(void(^)(AMQPMessage *message, NSError *error))completionBlock;
+
+/// Only messages retrieved without auto acknowledgement should be acknowledged.
+- (void)acknowledgeMessage:(AMQPMessage *)message completion:(void(^)(NSError *error))completionBlock;
+
 
 - (AMQPConsumer *)startConsumerWithAcknowledgements:(BOOL)ack isExclusive:(BOOL)exclusive receiveLocalMessages:(BOOL)local;
 

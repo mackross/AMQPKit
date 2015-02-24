@@ -25,6 +25,7 @@
 #import "LAMQPConnection.h"
 #import "AMQPChannel.h"
 #import "AMQPExchange+Additions.h"
+#import "AMQPConnection+Private.h"
 
 #import "AMQPConsumerThread.h"
 
@@ -267,7 +268,7 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
                                      isExclusive:NO
                                        isDurable:NO
                                  getsAutoDeleted:YES];
-        [_queue bindToExchange:_exchange withKey:_topic];
+        [_queue bindToExchange:_exchange withKey:_topic completion:nil];
     }
     @catch (NSException *exception) {
         if (outError != NULL) {
@@ -320,7 +321,7 @@ static const NSUInteger kMaxReconnectionAttempts = 3;
         @try {
             // if we're not connected, there's no point in attempting to unbind (pdcgomes 21.03.2013)
             if (!_connectionErrorWasRaised) {
-                [_queue unbindFromExchange:_exchange withKey:_topic];
+                [_queue unbindFromExchange:_exchange withKey:_topic completion:nil];
             }
         }
         @catch (NSException *exception) {

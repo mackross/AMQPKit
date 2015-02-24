@@ -14,9 +14,10 @@
 #import "AMQPQueue.h"
 #import "AMQPExchange.h"
 
+@class AMQPConnection;
 @interface AMQPChannel ()
 @property (assign, readwrite) amqp_channel_t internalChannel;
-- (void)openChannel:(amqp_channel_t)channel onConnection:(LAMQPConnection *)connection;
+- (NSError *)openChannel:(amqp_channel_t)channel onConnection:(AMQPConnection *)connection;
 @end
 
 @interface LAMQPConnection ()
@@ -34,5 +35,12 @@
 
 @interface AMQPExchange ()
 @property (assign, readonly) amqp_bytes_t internalExchange;
+@end
+
+@interface AMQPMaybe : NSObject
++ (instancetype)error:(NSError *)error;
++ (instancetype)value:(id)value;
+@property (nonatomic, readonly) id value;
+@property (nonatomic, readonly) NSError *error;
 @end
 

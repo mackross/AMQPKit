@@ -25,7 +25,7 @@
 #import "AMQP+Private.h"
 #import "AMQPQueue.h"
 #import "AMQPMessage.h"
-#import "LAMQPConnection.h"
+#import "AMQPConnection+Private.h"
 
 #define ERROR_NO_MEMORY 1
 #define ERROR_BAD_AMQP_DATA 2

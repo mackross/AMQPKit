@@ -31,8 +31,9 @@
 - (id)initDirectExchangeWithName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;
 - (id)initFanoutExchangeWithName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;
 - (id)initTopicExchangeWithName:(NSString *)theName onChannel:(AMQPChannel*)theChannel isPassive:(BOOL)passive isDurable:(BOOL)durable getsAutoDeleted:(BOOL)autoDelete;
-- (void)dealloc;
 
-- (void)publishMessage:(NSString *)body usingRoutingKey:(NSString *)theRoutingKey;
+- (void)declare:(void(^)(NSError *error))completionBlock;
+
+- (void)publishMessage:(NSString *)body usingRoutingKey:(NSString *)theRoutingKey completion:(void(^)(NSError *error))completionBlock;
 
 @end
