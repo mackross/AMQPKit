@@ -121,8 +121,13 @@
 				return nil;
 			}
 			
-			receivedBytes += frame.payload.body_fragment.len;
-			memcpy(body.bytes, frame.payload.body_fragment.bytes, frame.payload.body_fragment.len);
+            //Next Line is Julians fix for large messages
+            void *body_ptr = (char *)body.bytes + receivedBytes;
+            receivedBytes += frame.payload.body_fragment.len;
+            //New Line
+            memcpy(body_ptr, frame.payload.body_fragment.bytes, frame.payload.body_fragment.len);
+            //Original Line
+            //memcpy(body.bytes, frame.payload.body_fragment.bytes, frame.payload.body_fragment.len);
 		}
 		
 		message = [AMQPMessage messageFromBody:body withDeliveryProperties:delivery withMessageProperties:properties receivedAt:[NSDate date]];
